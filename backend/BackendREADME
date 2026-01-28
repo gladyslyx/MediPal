@@ -1,0 +1,8 @@
+Do NOT touch package.json.
+Do NOT touch package-lock.json.
+
+To create package.json (i.e: Become executable):
+npm init -y
+
+To download sqlite packages:
+npm install sqlite3
