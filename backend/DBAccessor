@@ -1,0 +1,90 @@
+import { DB } from "./DBConnect";
+import express from 'express';
+import bodyParser from 'body-parser'
+
+const app = express();
+app.use(bodyParser.json());//Json reader.
+
+//This file contains DB APIs.
+
+//<<<<<<DB Connector>>>>>>
+app.get('/', (req, res) =>{
+    res.send('DB online...')
+})
+
+//<<<<<<Port Listener>>>>>> : Listens on port 3000.
+app.listen(3000, (err) => {
+    if(err){
+        console.log('Error: listen: DBAccessor: ', err.message)
+    }
+    console.log('Listening on port 3000...')
+})
+
+//<<<<<<Get>>>>>> : Request data from table.
+app.get('/api', (req, res) => {
+    res.set('content-type', 'application/json');
+
+    //SQL: Find user based on EMAIL and PASSWORD.
+    const sql = 'SELECT * FROM USERLOGINTABLE WHERE EMAIL=? AND PASSWORD=?'; 
+    let data = {user: []}
+
+    try{
+        //SQL to DB: Push valid rows to array.
+        DB.all(sql, [req.query.EMAIL, req.query.PASSWORD], (err, rows)=>{
+            if(err) throw err;
+            rows.forEach((row)=>{
+                data.user.push({id: row.ID, email: row.EMAIL, password: row.PASSWORD})
+            });
+
+            //Data to JSON. Output JSON.
+            let content = JSON.stringify(data);
+            res.send(content);
+        })
+    }
+    catch(err){console.log('Error: get: DBAccessor: ', err.message)}
+})
+
+//<<<<<<Post>>>>>> : Add data to the table.
+app.post('/api', (req, res) => {
+    res.set('content-type', 'application/json');
+    console.log(req.body);
+
+    //SQL: Insert new email and password.
+    const sql = 'INSERT INTO USERLOGINTABLE(EMAIL, PASSWORD) VALUES (? , ?)'; 
+
+    try{
+        //SQL to DB: Request EMAIL and PASSWORD.
+        DB.run(sql, [req.body.EMAIL, req.body.PASSWORD], function(err){
+            if(err) throw err;
+
+            //Response to JSON. Output JSON.
+            let data = {message: 'Post successful.'};
+            let content = JSON.stringify(data);
+            res.send(content);
+        })
+    }
+    catch(err){console.log('Error: post: DBAccessor: ', err.message)}
+})
+
+//<<<<<<Delete>>>>>> : Removing item from table.
+app.delete('/api', (req, res) => {
+res.set('content-type', 'application/json');
+
+//SQL: Remove based on ID.
+const sql = 'DELETE FROM USERLOGINTABLE WHERE ID=?';
+
+    try{
+        //SQL to DB: Request ID, run SQL.
+        DB.run(sql, [req.query.ID], function(err){
+            if(err) throw err;
+
+            //
+            if(this.changes == 1){
+                res.send('{"message":"Item deleted."}')
+            }else{
+                res.send('{"message":"Nothing deleted."}')
+            }
+        })
+    }
+    catch(err){console.log('Error: post: DBAccessor: ', err.message)}
+})

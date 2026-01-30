@@ -1,6 +1,7 @@
 import "./App.css";
 import Login from "./Login.jsx";
 
+//Web application runner.
 function App() {
   return (
     <div className="App">
