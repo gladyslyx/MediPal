@@ -21,7 +21,7 @@ app.listen(3000, (err) => {
 })
 
 //<<<<<<Get>>>>>> : Request data from table.
-app.get('/api', (req, res) => {
+app.get('/get', (req, res) => {
     res.set('content-type', 'application/json');
 
     //SQL: Find user based on EMAIL and PASSWORD.
@@ -45,7 +45,7 @@ app.get('/api', (req, res) => {
 })
 
 //<<<<<<Post>>>>>> : Add data to the table.
-app.post('/api', (req, res) => {
+app.post('/update', (req, res) => {
     res.set('content-type', 'application/json');
     console.log(req.body);
 
@@ -67,7 +67,7 @@ app.post('/api', (req, res) => {
 })
 
 //<<<<<<Delete>>>>>> : Removing item from table.
-app.delete('/api', (req, res) => {
+app.delete('/del', (req, res) => {
 res.set('content-type', 'application/json');
 
 //SQL: Remove based on ID.
