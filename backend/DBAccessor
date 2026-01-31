@@ -1,6 +1,7 @@
 import { DB } from "./DBConnect";
 import express from 'express';
 import bodyParser from 'body-parser'
+import cors from 'cors';
 
 const app = express();
 app.use(bodyParser.json());//Json reader.
@@ -19,6 +20,9 @@ app.listen(3000, (err) => {
     }
     console.log('Listening on port 3000...')
 })
+
+//<<<<<<CORS Policy>>>>>>
+app.use(cors());
 
 //<<<<<<Get>>>>>> : Request data from table.
 app.get('/get', (req, res) => {

@@ -61,22 +61,23 @@ function Form() {
 
     console.log(dataObject);
 
-    //sendDataToBackend(dataObject);
+    sendDataToBackend(dataObject);
   };
 
   //Sending data to backend. >>NOT READY.
-  /*const sendDataToBackend = async (data) => {
+  const sendDataToBackend = async (data) => {
     try{
+      //Payload.
       const response = await fetch('http://localhost:3000/update', {
         method: 'POST',
         headers:{'Content-Type': 'application/json',},
-        body: JSON.stringify(data), 
+        body: JSON.stringify(data),
       });
 
       const result = await response.json();
       console.log('Server Response: ', result);
     }catch(err){"Error: Login: Login: ", err.message}
-  }*/
+  }
 
   //Returns HTML Body
   return (
@@ -88,7 +89,7 @@ function Form() {
             <div className="form-group">
                 <label>Email</label>
                 <input 
-                name="email"
+                name="EMAIL"
                 type="email"
                 placeholder="youremail@mail.com"
                 required
@@ -99,7 +100,7 @@ function Form() {
             <div className="form-group">
                 <label>Password</label>
                 <input 
-                name="password" 
+                name="PASSWORD" 
                 type="password"
                 placeholder="********"
                 required

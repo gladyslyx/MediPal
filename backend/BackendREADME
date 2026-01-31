@@ -52,3 +52,6 @@ npm install express
 
 Body-Parser package:
 npm install body-parser
+
+cors package:
+npm install cors
