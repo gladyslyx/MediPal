@@ -1,0 +1,116 @@
+.homepage {
+    background-color: #F1E6D8;
+    width: 100vw;
+}   
+
+.content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.content h1{
+    text-align: left;
+    margin-top: 20px;
+    color: #000000;
+}
+
+.content p{
+    text-align: left;
+    margin-top: 10px;
+    color: #000000;
+}
+
+.card-icon {
+    padding: 10px;
+    background-color: #28314E;
+}
+
+.top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.box1 {
+    background: linear-gradient(#AA2B3A,#28314E);
+    border-radius: 15px;
+    width: 300px;
+    height: 250px;
+}
+
+.Card p {
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.box2 { 
+    background-color: #FFFFFF;
+    border: #AA2B3A 3px solid;
+    border-radius: 15px;
+    width: 200px;
+    height: 250px;
+}
+
+.box3 {
+    background-color: #FFFFFF;
+    border: #AA2B3A 3px solid;
+    border-radius: 15px;
+    width: 250px;
+    height: 250px;
+}
+
+.card-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #28314E;
+    border-radius: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 12px;
+    margin-left: 13px;
+    font-size: 20px;
+}
+
+.Card h2{
+    color: #FFFFFF;
+    margin-left: 13px;
+    text-align: left;
+}
+
+.Card p {
+    margin-left: 13px;
+    text-align: left;
+}
+
+.open {
+    bottom: 20px;
+    right: 25px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.bottom-row span {
+    color: #000000;
+    bottom: 20px;
+    right: 25px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.box2 h2, .box2 p {
+    color: #000000;
+}
+
+.box3 h2, .box3 p {
+    color: #000000;
+}

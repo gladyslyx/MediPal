@@ -2,50 +2,48 @@ import "./Login.css";
 
 //<<<<<<Login Page>>>>>>: Handles and displays login page.
 export default function Login(){
-    return (
-        <div className="login-page">
-            <div className="login-card">
+  return (
+    <div className="login-page">
+      <div className="login-card">
+        {/*Call Switcher*/}
+        <Switcher />
 
-                {/*Call Switcher*/}
-                <Switcher />
+        {/*Message Division.*/}
+        <h1>Welcome Back</h1>
+        <p className="subtitle">Sign in to continue your health journey</p>
 
-                {/*Message Division.*/}
-                <h1>Welcome Back</h1>
-                <p className="subtitle">Sign in to continue your health journey</p>
+        {/*Call Form*/}
+        <Form />
 
-                {/*Call Form*/}
-                <Form />
-
-
-                {/*Call Checkbox*/}
-                <Checkbox />
-            </div>
-        </div> 
-    );
+        {/*Call Checkbox*/}
+        <Checkbox />
+      </div>
+    </div> 
+  );
 }
 
 //<<<<<<Switcher Handler>>>>>>
 function Switcher() {
-    return (
-        <main>
-         <div className="tabs">
-                  {/*Login Switcher*/}
-                  <button
-                    className="tab active"
-                    onClick={() => handleTabSwitch("login")}
-                  >
-                    Login
-                  </button>
-        
-                  {/*Register Switcher*/}
-                  <button
-                    className="tab"
-                    onClick={() => handleTabSwitch("register")}
-                  >
-                    Register
-                  </button>
-                </div>
-            </main>
+  return (
+    <main>
+      <div className="tabs">
+        {/*Login Switcher*/}
+        <button
+          className="tab active"
+          onClick={() => handleTabSwitch("login")}
+        >
+          Login
+        </button>
+
+        {/*Register Switcher*/}
+        <button
+          className="tab"
+          onClick={() => handleTabSwitch("register")}
+        >
+          Register
+        </button>
+      </div>
+    </main>
     );
 }
 
@@ -82,52 +80,51 @@ function Form() {
   //Returns HTML Body
   return (
     <main>
+      {/*Form Handler.*/}
+      <form name="form" onSubmit={handleSubmit}>     
+        {/*Email Input*/}
+        <div className="form-group">
+          <label>Email</label>
+          <input 
+            name="EMAIL"
+            type="email"
+            placeholder="youremail@mail.com"
+            required
+            />
+        </div>
 
-        {/*Form Handler.*/}
-        <form name="form" onSubmit={handleSubmit}>     
-            {/*Email Input*/}
-            <div className="form-group">
-                <label>Email</label>
-                <input 
-                name="EMAIL"
-                type="email"
-                placeholder="youremail@mail.com"
-                required
-                />
-            </div>
+        {/*Password Input.*/}
+        <div className="form-group">
+          <label>Password</label>
+            <input 
+              name="PASSWORD" 
+              type="password"
+              placeholder="********"
+              required
+              />
+        </div>
 
-            {/*Password Input.*/}
-            <div className="form-group">
-                <label>Password</label>
-                <input 
-                name="PASSWORD" 
-                type="password"
-                placeholder="********"
-                required
-                />
-            </div>
+        {/*Submit button.*/}
+        <button type="submit" className="submit-btn"> Log In </button>
 
-            {/*Submit button.*/}
-            <button type="submit" className="submit-btn"> Log In </button>
-
-            {/*End of form*/}
-            </form>
+      {/*End of form*/}
+      </form>
     </main>
   );
 }
 
 //<<<<<<Checkbox Handler>>>>>>
 function Checkbox() {
-    return (
-        <main>
-            {/*Remember Me Checkbox + Forgot Password. Incomplete.*/}
-            <div className="form-options">
-                <label className="remember">
-                    <input type="checkbox" />
-                    Remember me
-                </label>
-                <span className="forgot">Forgot password?</span>
-            </div>
-        </main>
-    );
+  return (
+    <main>
+      {/*Remember Me Checkbox + Forgot Password. Incomplete.*/}
+      <div className="form-options">
+        <label className="remember">
+        <input type="checkbox" />
+          Remember me
+        </label>
+        <span className="forgot">Forgot password?</span>
+      </div>
+    </main>
+  );
 }
