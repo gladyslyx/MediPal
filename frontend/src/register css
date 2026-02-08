@@ -1,0 +1,122 @@
+/*background color*/
+.login-page {
+  width: 100vw;
+  background: #1f2937; /* UI deep colour background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+/*register card*/
+.login-card {
+  width: 520px;
+  background: #f3e9dc; /* UI card background */
+  border-radius: 30px;
+  padding: 40px 50px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+/*swith the tab bar */
+.tabs {
+  display: flex;
+  background: #c1b4a5; /* UI light gray background*/
+  border-radius: 30px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+/*single tag button*/
+.tab {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  background: transparent;
+  font-weight: normal;
+  color: #000; /* No actived black color text */
+}
+
+/* active tag bar（Register） */
+.tab.active {
+  background: #b12b3a; /* UI deep red background */
+  color: white; /* active tag white */
+}
+/* main title（Create account/Welcome Back） */
+.login-card h1 {
+  text-align: center;
+  margin-bottom: 5px;
+  color: #000000;
+  font-size: 28px;
+  font-weight: normal;
+}
+/* subtitle（Begin your health journey today） */
+.subtitle {
+  text-align: center;
+  color: #6f6f6f; /* UI light gray subtitle */
+  margin-bottom: 30px;
+  font-size: 16px;
+}
+/*from group input container*/
+.form-group {
+  margin-bottom: 18px;
+}
+/* from tag  (Full Name/Email/Password） */
+.form-group label {
+  display: block;
+  color: #000000;
+  margin-bottom: 6px;
+  text-align: left;
+  font-size: 16px;
+}
+/* imput box form（match UI wite input box） */
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #aaa;
+  font-size: 14px;
+  background: white;
+}
+/* agree terms */
+.agree {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: #6f6f6f; /* UI light gray terms article */
+  margin: 15px 0 25px;
+  font-size: 14px;
+}
+/* submit button（Create Account/Log In） */
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: #b12b3a; /* UI deep red button */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  font-family: 'Times New Roman', Times, serif;
+}
+/* button float effect（deep red） */
+.submit-btn:hover {
+  background: #951f2d;
+}
+/* only for login page：remember password /forget password（only login page display） */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0 25px;
+}
+.remember {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  color: #000;
+  font-size: 14px;
+}
+.forgot {
+  color: #9a8c7a;
+  cursor: pointer;
+  font-size: 14px;
+}
