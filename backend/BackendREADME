@@ -28,6 +28,23 @@ To run DB API's:
 2. Write 'node DBAccessor'
 3. Go to listening port.
 
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<API>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+/authorise
+Method: POST
+Function: Finds EMAIL and PASSWORD in USERLOGINTABLE.
+Return: If found 1, else 0.
+
+API's BELOW ARE FOR REFERENCE AND DEVELOPMENT. THEY CANNOT BE USED:
+/get
+Method: GET
+
+/update
+Method: POST
+
+/delete
+Method: DELETE
+
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<TOOLS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 POSTMAN - Used to test DB endpoint APIs.

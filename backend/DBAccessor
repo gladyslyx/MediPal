@@ -24,7 +24,30 @@ app.listen(3000, (err) => {
 //<<<<<<CORS Policy>>>>>>
 app.use(cors());
 
-//<<<<<<Get>>>>>> : Request data from table.
+//<<<<<<Authorise>>>>>> : Find EMAIL and PASSWORD from table. Return 1 if found, else 0.
+app.post('/authorise', (req, res) => {
+    res.set('content-type', 'application/json');
+
+    //SQL: Find user based on EMAIL and PASSWORD.
+    const sql = 'SELECT * FROM USERLOGINTABLE WHERE EMAIL=? AND PASSWORD=?'; 
+    let data = 1;
+
+    try{
+        //SQL to DB: Find if rows exist in table
+        DB.all(sql, [req.body.EMAIL, req.body.PASSWORD], (err, rows)=>{
+            if(err) throw err;
+            else 
+                if (rows.length > 0) data = 1;
+                else data = 0;
+
+            res.send(data);
+        })
+    }
+    catch(err){console.log('Error: authorise: DBAccessor: ', err.message)}
+})
+
+{/*
+//<<<<<<Get>>>>>> : Request data from table.    
 app.get('/get', (req, res) => {
     res.set('content-type', 'application/json');
 
@@ -92,3 +115,5 @@ const sql = 'DELETE FROM USERLOGINTABLE WHERE ID=?';
     }
     catch(err){console.log('Error: post: DBAccessor: ', err.message)}
 })
+
+*/}

@@ -66,7 +66,7 @@ function Form() {
   const sendDataToBackend = async (data) => {
     try{
       //Payload.
-      const response = await fetch('http://localhost:3000/update', {
+      const response = await fetch('http://localhost:3000/authorise', {
         method: 'POST',
         headers:{'Content-Type': 'application/json',},
         body: JSON.stringify(data),
