@@ -1,3 +1,4 @@
+import { BrowserRouter,Routes,Route } from 'react-router-dom';
 import "./App.css";
 import Login from "./Login.jsx";
 import Homepage from "./Homepage.jsx";
@@ -8,14 +9,17 @@ import CreateProfile from "./CreateProfile.jsx";
 //Web application runner.
 function App() {
   return (
-    <div className="App">
-      <Login />
-      {/*<Homepage />*/}
-      {/* <CreateProfile /> */}
-      {/* <ProfileSelection /> */}
-      {/* <UserProfile /> */}
-    </div>
-  );
+    <BrowserRouter>
+    <Routes>
+
+      {/*Origin Page -> Home*/}
+      <Route index element={<Login/>}/>
+
+      {/* */}
+      <Route path='/home' element={<Homepage/>}/>
+    </Routes>
+    </BrowserRouter>
+  )
 }
 
 export default App;

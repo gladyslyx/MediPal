@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 //<<<<<<Login Page>>>>>>: Handles and displays login page.
@@ -21,6 +22,7 @@ export default function Login(){
     </div> 
   );
 }
+
 
 //<<<<<<Switcher Handler>>>>>>
 function Switcher() {
@@ -50,6 +52,11 @@ function Switcher() {
 //<<<<<<Form Handler>>>>>>
 function Form() {
 
+  const nav = useNavigate()
+  const navigate = () =>{
+    nav('/home')
+  };
+
   //Handles form submit.
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -57,12 +64,10 @@ function Form() {
     const formData = new FormData(event.target);
     const dataObject = Object.fromEntries(formData);
 
-    console.log(dataObject);
-
     sendDataToBackend(dataObject);
   };
 
-  //Sending data to backend. >>NOT READY.
+  //Sending data to backend.
   const sendDataToBackend = async (data) => {
     try{
       //Payload.
@@ -74,8 +79,15 @@ function Form() {
 
       const result = await response.json();
       console.log('Server Response: ', result);
+
+      if (result == 1) {
+        console.log("Success")
+        navigate();
+      }
+      else alert("Wrong email or password!")
+
     }catch(err){"Error: Login: Login: ", err.message}
-  }
+  };
 
   //Returns HTML Body
   return (
