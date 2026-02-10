@@ -5,13 +5,12 @@ Health tracking web application.
 ### Prerequisites
 
 ## BACKEND
-### Background
-This section currently primarily handles the database and API's.
-
-### Execution  
+### Background  
+This section currently primarily handles the database and API's.  
 Listening port: 3000  
 URL: http://localhost:3000
 
+### Execution  
 To open database connection:
 1. Use the terminal, navigate to the folder "backend".  
 <img src="./DemoImages/NaviToBackend.png" width="500">
