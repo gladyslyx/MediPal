@@ -93,6 +93,10 @@ h1 {
   cursor: pointer;
 }
 
+.termscons {
+  color:#000000;
+}
+
 .submit-btn {
   width: 100%;
   padding: 14px;

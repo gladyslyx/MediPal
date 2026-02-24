@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import "./Login.css";
+import "./LoginRegister.css";
 
 //<<<<<<Login Page>>>>>>: Handles and displays login page.
 export default function Login(){
@@ -11,7 +11,7 @@ export default function Login(){
 
         {/*Message Division.*/}
         <h1>Welcome Back</h1>
-        <p className="subtitle">Sign in to continue your health journey</p>
+        <p className="subtitle">Log in to continue your health journey</p>
 
         {/*Call Form*/}
         <Form />
@@ -26,13 +26,18 @@ export default function Login(){
 
 //<<<<<<Switcher Handler>>>>>>
 function Switcher() {
+  
+  const nav = useNavigate()
+  const navigate = () =>{
+    nav('/register')
+  };
+
   return (
     <main>
       <div className="tabs">
         {/*Login Switcher*/}
         <button
           className="tab active"
-          onClick={() => handleTabSwitch("login")}
         >
           Login
         </button>
@@ -40,7 +45,7 @@ function Switcher() {
         {/*Register Switcher*/}
         <button
           className="tab"
-          onClick={() => handleTabSwitch("register")}
+          onClick={navigate}
         >
           Register
         </button>

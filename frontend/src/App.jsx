@@ -1,6 +1,7 @@
 import { BrowserRouter,Routes,Route } from 'react-router-dom';
 import "./App.css";
-import Login from "./Login.jsx";
+import Login from "./Login.jsx"
+import Register from './Register.jsx';
 import Homepage from "./Homepage.jsx";
 import UserProfile from "./UserProfile.jsx";
 import ProfileSelection from "./ProfileSelection.jsx";
@@ -12,11 +13,23 @@ function App() {
     <BrowserRouter>
     <Routes>
 
-      {/*Origin Page -> Home*/}
-      <Route index element={<Login/>}/>
+      {/*Src: Is Origin. Dest: Home, Register.*/}
+      <Route index path='/login' element={<Login/>}/>
 
-      {/* */}
+      {/*Src: Login. Dest: Login. */}
+      <Route path='/register' element={<Register/>}/>
+
+      {/*Src: Login. Dest: User Profile */}
       <Route path='/home' element={<Homepage/>}/>
+
+      {/*Inaccessable*/}
+      <Route path='/user' element={<UserProfile/>}/>
+
+      {/*Inaccessable*/}
+      <Route path='/profile' element={<ProfileSelection/>}/>
+
+      {/*Inaccessable*/}
+      <Route path='/create' element={<CreateProfile/>}/>
     </Routes>
     </BrowserRouter>
   )

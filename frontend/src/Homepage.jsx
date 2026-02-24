@@ -1,6 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import "./Homepage.css";
-import UserProfile from "./UserProfile";
 
+//Root Component: /home
 export default function Homepage() {
 
     return (
@@ -17,7 +18,7 @@ export default function Homepage() {
     );
 }
 
-function Card({title, description,variant, icon}){
+function Card({title, description,variant, icon, callback}){
     return (
         <div className= {`Card ${variant === "primary" ? "card-primary" : "card-secondary"}`}>
             <div className="card-icon">
@@ -25,12 +26,18 @@ function Card({title, description,variant, icon}){
             </div>
             <h2>{title}</h2>
             <p>{description}</p>
-            <span className="open"> Open &gt; </span>
+            <span className="open" onClick={callback}> Open &gt; </span>
         </div>
     );
 }
 
 function TopRow() {
+
+    const nav = useNavigate()
+    const navigateUser = () =>{
+    nav('/user')
+};
+
     return (
         <div className="top-row">
             <div className="box1">
@@ -58,6 +65,7 @@ function TopRow() {
                     description="View and manage family health profiles"
                     variant="primary"
                     icon="👤" 
+                    callback={navigateUser}
                 />
             </div>  
         </div>
