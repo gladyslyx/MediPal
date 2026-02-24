@@ -58,10 +58,17 @@ function Form(){
   const handleSubmit = (event) => {
     event.preventDefault();
     
-    const formData = new FormData(event.target);
-    const dataObject = Object.fromEntries(formData);
+    const checkBox = document.getElementById("termsconsCheck")
+    if(checkBox.checked){
 
-    sendDataToBackend(dataObject);
+      const formData = new FormData(event.target);
+      const dataObject = Object.fromEntries(formData);
+
+    // sendDataToBackend(dataObject);
+    
+    } else {
+      alert("Agree to terms and conditions.");
+    }
   };
 
   //Sending data to backend. NOT DONE
@@ -86,53 +93,56 @@ function Form(){
     }catch(err){"Error: Login: Login: ", err.message}
   };
 
+
+
   // status control：agree terms checkbox
   const [agreeTerms, setAgreeTerms] = useState(false);
 
 //HTML Body.
 return(
 <main>
-    {/*Form Handler*/}
-    <form onSubmit={handleSubmit}>
+  {/*Form Handler*/}
+  <form onSubmit={handleSubmit}>
 
-      {/*Email Input*/}
-      <div className="form-group">
+    {/*Email Input*/}
+    <div className="form-group">
       <label>Email</label>
         <input
           name="EMAIL"
           placeholder="youremail@mail.com"
           required
         />
-      </div>
+    </div>
 
-      {/*Password Input*/}
-      <div className="form-group">
+    {/*Password Input*/}
+    <div className="form-group">
         <label>Password</label>
           <input
           name="PASSWORD"
           placeholder="******"
           required
           />
-      </div>
+    </div>
 
-      {/*Terms and Conditions*/}
-      <div className="agree">
+    {/*Terms and Conditions*/}
+    <div className="agree">
         <input
+          id="termsconsCheck"
           type="checkbox"
           checked={agreeTerms}
           onChange={() => setAgreeTerms(!agreeTerms)}
           required
         />
         <label className="termscons">I agree to Terms and Conditions and Privacy Policy</label>
-      </div>
+    </div>
 
-      {/*Submit Button*/}
-      <button type="submit" className="submit-btn">
+    {/*Submit Button*/}
+    <button type="submit" className="submit-btn">
         Create Account
-      </button>
+    </button>
     
-    {/*Form End*/}
-    </form>
+  {/*Form End*/}
+  </form>
 </main>
 );
 }

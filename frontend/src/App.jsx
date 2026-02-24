@@ -1,4 +1,5 @@
-import { BrowserRouter,Routes,Route } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { BrowserRouter,Routes,Route,Navigate } from 'react-router-dom';
 import "./App.css";
 import Login from "./Login.jsx"
 import Register from './Register.jsx';
@@ -9,12 +10,16 @@ import CreateProfile from "./CreateProfile.jsx";
 
 //Web application runner.
 function App() {
+
   return (
     <BrowserRouter>
     <Routes>
 
+      {/* Index Path */}
+      <Route index element={<Navigate to="/login" replace/>}/>
+
       {/*Src: Is Origin. Dest: Home, Register.*/}
-      <Route index path='/login' element={<Login/>}/>
+      <Route path="/login" element={<Login/>}/>
 
       {/*Src: Login. Dest: Login. */}
       <Route path='/register' element={<Register/>}/>
