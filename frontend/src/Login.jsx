@@ -83,7 +83,6 @@ function Form() {
       });
 
       const result = await response.json();
-      console.log('Server Response: ', result);
 
       if (result == 1) {
         console.log("Success")

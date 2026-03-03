@@ -54,49 +54,50 @@ function Switcher() {
 //<<<<<<Form Handler>>>>>>
 function Form(){
 
+  const nav = useNavigate()
+  const navigate = () =>{
+    nav('/home')
+  };
+
   //Handles form submit.
   const handleSubmit = (event) => {
     event.preventDefault();
-    
-    const checkBox = document.getElementById("termsconsCheck")
-    if(checkBox.checked){
 
-      const formData = new FormData(event.target);
-      const dataObject = Object.fromEntries(formData);
+    var pass1 = document.getElementById("firstPass").value
+    var pass2 = document.getElementById("reenterPass").value
 
-    // sendDataToBackend(dataObject);
-    
-    } else {
-      alert("Agree to terms and conditions.");
+    if(pass1 === pass2){
+      if(pass1.length >= 8){
+        const formData = new FormData(event.target);
+        const dataObject = Object.fromEntries(formData);
+
+        sendDataToBackend(dataObject);
+      }
+      else alert("Password must be 8 characters or longer!");
     }
-  };
+    else alert("Password is not the same!");
+    }
 
-  //Sending data to backend. NOT DONE
+  //Sending data to backend.
   const sendDataToBackend = async (data) => {
     try{
       //Payload.
-      const response = await fetch('http://localhost:3000/', {
+      const response = await fetch('http://localhost:3000/register', {
         method: 'POST',
         headers:{'Content-Type': 'application/json',},
         body: JSON.stringify(data),
       });
 
       const result = await response.json();
-      console.log('Server Response: ', result);
 
       if (result == 1) {
         console.log("Success")
         navigate();
       }
-      else alert("Wrong email or password!")
+      else alert("Email has already been registered!");
 
-    }catch(err){"Error: Login: Login: ", err.message}
+    }catch(err){"Error: Register: Register: ", err.message}
   };
-
-
-
-  // status control：agree terms checkbox
-  const [agreeTerms, setAgreeTerms] = useState(false);
 
 //HTML Body.
 return(
@@ -118,22 +119,21 @@ return(
     <div className="form-group">
         <label>Password</label>
           <input
+          id="firstPass"
           name="PASSWORD"
           placeholder="******"
           required
           />
     </div>
 
-    {/*Terms and Conditions*/}
-    <div className="agree">
-        <input
-          id="termsconsCheck"
-          type="checkbox"
-          checked={agreeTerms}
-          onChange={() => setAgreeTerms(!agreeTerms)}
+    {/*Re-enter Password Input*/}
+    <div className="form-group">
+        <label>Confirm Password</label>
+          <input
+          id="reenterPass"
+          placeholder="******"
           required
-        />
-        <label className="termscons">I agree to Terms and Conditions and Privacy Policy</label>
+          />
     </div>
 
     {/*Submit Button*/}

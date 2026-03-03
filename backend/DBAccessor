@@ -28,9 +28,11 @@ app.use(cors());
 app.post('/authorise', (req, res) => {
     res.set('content-type', 'application/json');
 
+    //Validation output.
+     let data = 0;
+
     //SQL: Find user based on EMAIL and PASSWORD.
     const sql = 'SELECT * FROM USERLOGINTABLE WHERE EMAIL=? AND PASSWORD=?'; 
-    let data = 1;
 
     try{
         //SQL to DB: Find if rows exist in table
@@ -44,6 +46,46 @@ app.post('/authorise', (req, res) => {
         })
     }
     catch(err){console.log('Error: authorise: DBAccessor: ', err.message)}
+})
+
+//<<<<<<Register>>>>>> : Add Email and Password to the table. Checks if account is already registered.
+app.post('/register', (req, res) => {
+    res.set('content-type', 'application/json');
+
+    //Validation output.
+    let data = 1;
+
+    //SQL: Find user based on EMAIL and PASSWORD.
+    const sql1 = 'SELECT * FROM USERLOGINTABLE WHERE EMAIL=?'; 
+
+    //SQL: Insert new email and password.
+    const sql2 = 'INSERT INTO USERLOGINTABLE(EMAIL, PASSWORD) VALUES (? , ?)'; 
+
+    try{
+        //SQL to DB: Check if EMAIL is in the table.
+        DB.all(sql1, [req.body.EMAIL], (err, rows)=>{
+            if(err) throw err;
+            else 
+                if (rows.length > 0) {
+                    data = 0;//Err Msg...
+                    res.send(data);
+                    return;
+                }
+        })
+    }
+    catch(err){console.log('Error: register: DBAccessor: ', err.message)}
+
+    try{
+        //SQL to DB: Insert EMAIL and PASSWORD into table.
+        DB.all(sql2, [req.body.EMAIL, req.body.PASSWORD], (err, rows)=>{
+            if(err) throw err;
+            else 
+                data = 1;
+            res.send(data);
+        })
+    }
+    catch(err){console.log('Error: register: DBAccessor: ', err.message)}
+
 })
 
 {/*
