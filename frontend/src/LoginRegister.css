@@ -93,8 +93,9 @@ h1 {
   cursor: pointer;
 }
 
-.termscons {
-  color:#000000;
+.err {
+  color:#a60000;
+  display: none;
 }
 
 .submit-btn {

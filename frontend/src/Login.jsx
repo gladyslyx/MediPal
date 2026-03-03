@@ -56,10 +56,19 @@ function Switcher() {
 
 //<<<<<<Form Handler>>>>>>
 function Form() {
-
+  
   const nav = useNavigate()
   const navigate = () =>{
     nav('/home')
+  };
+
+  /** [ Feature Function ] 
+   * Displays error message on the form.
+  */
+  const displayErr = (msg) =>{
+    var err = document.getElementById("err")
+    err.textContent = msg;
+    err.style.display = 'inline';
   };
 
   //Handles form submit.
@@ -88,7 +97,7 @@ function Form() {
         console.log("Success")
         navigate();
       }
-      else alert("Wrong email or password!")
+      else displayErr("Wrong email or password.");
 
     }catch(err){"Error: Login: Login: ", err.message}
   };
@@ -98,6 +107,10 @@ function Form() {
     <main>
       {/*Form Handler.*/}
       <form name="form" onSubmit={handleSubmit}>     
+
+        {/*Error Message Display.*/}
+        <span id="err" className="err"></span>
+
         {/*Email Input*/}
         <div className="form-group">
           <label>Email</label>

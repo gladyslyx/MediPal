@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginRegister.css";
 
@@ -54,35 +53,70 @@ function Switcher() {
 //<<<<<<Form Handler>>>>>>
 function Form(){
 
+  /** [ Helper Function ] 
+   * Displays error message on the form.
+  */
+  const displayErr = (msg) =>{
+    var err = document.getElementById("err");
+    err.textContent = msg;
+    err.style.display = 'inline';
+  };
+
+  /**[ Helper Function ]
+   * Validates data entry.
+   * Handles early data entry errors.
+   */
+  const validateFormData = () => {
+
+    var pass1 = document.getElementById("firstPass").value
+    var pass2 = document.getElementById("reenterPass").value
+
+    //Checks if password is atleast 8 characters long.
+      if(pass1.length >= 8){
+        
+        //Checks if password is the same as confirm password.
+        if(pass1 === pass2) return 1; //Success
+        else{ 
+          displayErr("Password is not the same!"); // Failure
+          return 0;
+        }
+      }
+      else{
+      displayErr("Password must be 8 characters or longer!"); //Failure
+      return 0;
+      }
+  }
+
+  /** [ Feature Function ] 
+  * Holds navigation address.
+  */
   const nav = useNavigate()
   const navigate = () =>{
     nav('/home')
   };
 
-  //Handles form submit.
+  /** [ Feature Function ] 
+   * Called when submitting form data.
+  */
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    var pass1 = document.getElementById("firstPass").value
-    var pass2 = document.getElementById("reenterPass").value
-
-    if(pass1 === pass2){
-      if(pass1.length >= 8){
-        const formData = new FormData(event.target);
+    if(validateFormData() == 1){
+      const formData = new FormData(event.target);
         const dataObject = Object.fromEntries(formData);
 
         sendDataToBackend(dataObject);
-      }
-      else alert("Password must be 8 characters or longer!");
     }
-    else alert("Password is not the same!");
     }
 
-  //Sending data to backend.
+  /** [ Backend Function ] 
+   * Sends data to backend.
+   * Handles late data entry errors.
+  */
   const sendDataToBackend = async (data) => {
     try{
-      //Payload.
-      const response = await fetch('http://localhost:3000/register', {
+      //Validation Payload.
+      const response = await fetch('http://localhost:3000/authorise', {
         method: 'POST',
         headers:{'Content-Type': 'application/json',},
         body: JSON.stringify(data),
@@ -91,10 +125,26 @@ function Form(){
       const result = await response.json();
 
       if (result == 1) {
-        console.log("Success")
-        navigate();
+        console.log("Email was found.")
+        displayErr("Email has already been registered!")
       }
-      else alert("Email has already been registered!");
+      else{
+
+        //Real Payload.
+        const response = await fetch('http://localhost:3000/register', {
+        method: 'POST',
+        headers:{'Content-Type': 'application/json',},
+        body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (result == 1) {
+        console.log("Email was registered.")
+        navigate();
+        }
+
+      }
 
     }catch(err){"Error: Register: Register: ", err.message}
   };
@@ -104,6 +154,9 @@ return(
 <main>
   {/*Form Handler*/}
   <form onSubmit={handleSubmit}>
+
+    {/*Error Message Display.*/}
+    <span id="err" className="err"></span>
 
     {/*Email Input*/}
     <div className="form-group">
