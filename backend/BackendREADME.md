@@ -30,24 +30,12 @@ To run DB API's:
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<API>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-/authorise
-Method: POST
-Function: Finds EMAIL and PASSWORD in USERLOGINTABLE.
-Return: If found 1, else 0.
 
-API's BELOW ARE FOR REFERENCE AND DEVELOPMENT. THEY CANNOT BE USED:
-/get
-Method: GET
-
-/update
-Method: POST
-
-/delete
-Method: DELETE
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<TOOLS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 POSTMAN - Used to test DB endpoint APIs.
+Rest Client Extension - Used to test DB endpoint APIs.
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<GLOSSARY>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -59,16 +47,37 @@ res - Response
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<PACKAGES>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 To create package.json (i.e: Become executable):
-npm init -y
+CMD: npm init -y
 
-Sqlite packages:
-npm install sqlite3
+Sqlite package:
+CMD: npm install sqlite3
+DESC: For database handling.
 
 Express package:
-npm install express
+CMD: npm install express
+DESC: Node JS backend framework.  
 
 Body-Parser package:
-npm install body-parser
+CMD: npm install body-parser
+DESC: Parsing of JSON.
 
 cors package:
-npm install cors
+CMD: npm install cors
+DESC: For cors policy.
+
+JWT package:
+CMD: npm install jsonwebtoken
+DESC: To create access tokens.
+
+bcrypt package:
+CMD: npm install bcrypt
+DESC: Encryption.
+
+nodemon package: (Dev Dependency)
+CMD: npm install --save-dev nodemon
+DESC: Auto updates upon saving program.
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<OTHERS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Creating a random code:
+require('crypto').randomBytes(16).toString('hex')

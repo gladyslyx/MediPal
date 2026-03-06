@@ -2,70 +2,91 @@ import { DB } from "./DBConnect";
 import express from 'express';
 import bodyParser from 'body-parser'
 import cors from 'cors';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 const app = express();
-app.use(bodyParser.json());//Json reader.
+app.use(bodyParser.json()); //Allows JSON read.
+app.use(cors()); //Allow cross-origin requests.
 
-//This file contains DB APIs.
+//>>SET UP>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-//<<<<<<DB Connector>>>>>>
+//Port number. Currently set to 3000, local host.
+const portCode = 3000;
+
+//Port listener. Logs message if successful.
+app.listen(portCode, (err) => {
+    if(err) console.log('Error: listen: DBAccessor: ', err.message);
+    console.log('Listening on port: ', portCode);
+})
+
+//Connection test. Returns message if successful.
 app.get('/', (req, res) =>{
-    res.send('DB online...')
+    res.status(200).send('OK. DB Online...')
 })
 
-//<<<<<<Port Listener>>>>>> : Listens on port 3000.
-app.listen(3000, (err) => {
-    if(err){
-        console.log('Error: listen: DBAccessor: ', err.message)
-    }
-    console.log('Listening on port 3000...')
-})
+//>>API ENDPOINTS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-//<<<<<<CORS Policy>>>>>>
-app.use(cors());
-
-//<<<<<<Authorise>>>>>> : Find EMAIL and PASSWORD from table. Return 1 if found, else 0.
-app.post('/authorise', (req, res) => {
+/** /register
+ * Registers email and password to the database.
+ * Returns 1 if successful, 0 if unsuccessful.
+ */
+app.post('/register', async (req, res) => {
     res.set('content-type', 'application/json');
 
-    //Validation output.
-     let data = 0;
+    //SQL CMD: Insert new email and password.
+    const sqlCheck = 'SELECT * FROM USERLOGINTABLE WHERE EMAIL=?'; 
 
-    //SQL: Find user based on EMAIL and PASSWORD.
-    const sql = 'SELECT * FROM USERLOGINTABLE WHERE EMAIL=? AND PASSWORD=?'; 
+    //SQL CMD: Insert new email and password.
+    const sqlInsert = 'INSERT INTO USERLOGINTABLE(EMAIL, PASSWORD) VALUES (? , ?)'; 
 
     try{
-        //SQL to DB: Find if rows exist in table
-        DB.all(sql, [req.body.EMAIL, req.body.PASSWORD], (err, rows)=>{
-            if(err) throw err;
+        //SQL to DB: Check if email already exists.
+        DB.all(sqlCheck, [req.body.EMAIL], async (err, rows)=>{
+            if(err) return res.status(400).send(0);//Err: Bad Req.
             else 
-                if (rows.length > 0) data = 1;
-                else data = 0;
+                if (rows.length > 0) return res.status(409).send(0);//Err: Conflict: Email already exists.
+                else{
+                    //Hash password. Salt rounds: 10.
+                    const hashedPassword = await bcrypt.hash(req.body.PASSWORD, 10)
 
-            res.send(data);
-        })
+                    //Insertion.
+                    DB.run(sqlInsert, [req.body.EMAIL, hashedPassword], function(err){
+                    if(err) return res.status(400).send(0);//Err: Bad Req.
+                    else return res.status(200).send(1);//Success: Registered.
+                    })
+                }
+        })        
     }
-    catch(err){console.log('Error: authorise: DBAccessor: ', err.message)}
+    catch(err){res.status(500).send(0)}//Err: Server Err.
 })
 
-//<<<<<<Register>>>>>> : Add Email and Password to the table.
-app.post('/register', (req, res) => {
+/** /login
+ * Checks if email exists, and if password matches the email.
+ * Returns 1 if successful, 0 if unsuccessful.
+ */
+app.post('/login', (req, res) => {
     res.set('content-type', 'application/json');
 
-    //Validation output.
-    let data = 0;
-
-    //SQL: Insert new email and password.
-    const sql = 'INSERT INTO USERLOGINTABLE(EMAIL, PASSWORD) VALUES (? , ?)'; 
+    //SQL CMD: Find user based on EMAIL.
+    const sql = 'SELECT * FROM USERLOGINTABLE WHERE EMAIL=?'; 
 
     try{
-        DB.run(sql, [req.body.EMAIL, req.body.PASSWORD], function(err){
-            if(err) throw err;
-            else data = 1;
-            res.send(data);
+        //SQL to DB: Check if email exists.
+        DB.all(sql, [req.body.EMAIL], async (err, rows)=>{
+            if(err) res.status(400).send(0); //Err: Bad Req.
+            else 
+                //If email exists, compare password.
+                if (rows.length > 0){
+                    //Compare hashed password with input password.
+                    if(await bcrypt.compare(req.body.PASSWORD, rows[0].PASSWORD))
+                        res.status(200).send(1);//Success: Authorized.
+                    else res.status(401).send(0);//Err: Unauthorized: Password does not match.
+                }
+                else res.status(401).send(0);//Err: Unauthorized: Email does not exist.
         })
     }
-    catch(err){console.log('Error: register: DBAccessor: ', err.message)}
+    catch(err){res.status(500).send(0)}//Err: Server Err.
 })
 
 {/*

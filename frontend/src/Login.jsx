@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import "./LoginRegister.css";
 
+const API_LOGIN = 'http://localhost:3000/login ';
+
 //<<<<<<Login Page>>>>>>: Handles and displays login page.
 export default function Login(){
   return (
@@ -22,7 +24,6 @@ export default function Login(){
     </div> 
   );
 }
-
 
 //<<<<<<Switcher Handler>>>>>>
 function Switcher() {
@@ -71,7 +72,9 @@ function Form() {
     err.style.display = 'inline';
   };
 
-  //Handles form submit.
+  /** [ Feature Function ] 
+   * Called when submitting form data.
+  */
   const handleSubmit = (event) => {
     event.preventDefault();
     
@@ -81,23 +84,30 @@ function Form() {
     sendDataToBackend(dataObject);
   };
 
-  //Sending data to backend.
+  /** [ Backend Function ] 
+   * Sends data to backend.
+   * Handles late data entry errors.
+  */
   const sendDataToBackend = async (data) => {
     try{
       //Payload.
-      const response = await fetch('http://localhost:3000/authorise', {
+      const response = await fetch(API_LOGIN, {
         method: 'POST',
         headers:{'Content-Type': 'application/json',},
         body: JSON.stringify(data),
       });
-
       const result = await response.json();
 
+      //Check response.
       if (result == 1) {
-        console.log("Success")
+        console.log('Status: ',result.status);
         navigate();
       }
-      else displayErr("Wrong email or password.");
+      else if (result == 0 && response.status == 401) { 
+        console.log('Status: ',result.status);
+        displayErr("Wrong email or password.");
+      }
+      else displayErr("Error: Login failed!");
 
     }catch(err){"Error: Login: Login: ", err.message}
   };

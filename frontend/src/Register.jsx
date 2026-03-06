@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import "./LoginRegister.css";
 
+const API_REGISTER = 'http://localhost:3000/register ';
+
 //<<<<<<Register Page>>>>>>: Handles and displays register page.
 export default function Register() {
   return (
@@ -103,11 +105,11 @@ function Form(){
 
     if(validateFormData() == 1){
       const formData = new FormData(event.target);
-        const dataObject = Object.fromEntries(formData);
+      const dataObject = Object.fromEntries(formData);
 
-        sendDataToBackend(dataObject);
+      sendDataToBackend(dataObject);
     }
-    }
+  }
 
   /** [ Backend Function ] 
    * Sends data to backend.
@@ -115,38 +117,25 @@ function Form(){
   */
   const sendDataToBackend = async (data) => {
     try{
-      //Validation Payload.
-      const response = await fetch('http://localhost:3000/authorise', {
-        method: 'POST',
-        headers:{'Content-Type': 'application/json',},
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (result == 1) {
-        console.log("Email was found.")
-        displayErr("Email has already been registered!")
-      }
-      else{
 
         //Real Payload.
-        const response = await fetch('http://localhost:3000/register', {
+        const response = await fetch(API_REGISTER, {
         method: 'POST',
         headers:{'Content-Type': 'application/json',},
         body: JSON.stringify(data),
         });
-
         const result = await response.json();
 
         if (result == 1) {
-        console.log("Email was registered.")
+        console.log("Status: ", response.status);
         navigate();
         }
+        else if (result == 0 && response.status == 409) 
+          displayErr("Email already exists!"); //Conflict: Email already exists.
+        else displayErr("Error: Registration failed!");
 
-      }
-
-    }catch(err){"Error: Register: Register: ", err.message}
+      } 
+      catch(err){"Error: Register: Register: ", err.message}
   };
 
 //HTML Body.
@@ -173,6 +162,7 @@ return(
         <label>Password</label>
           <input
           id="firstPass"
+          type="password"
           name="PASSWORD"
           placeholder="******"
           required
@@ -184,6 +174,7 @@ return(
         <label>Confirm Password</label>
           <input
           id="reenterPass"
+          type="password"
           placeholder="******"
           required
           />
