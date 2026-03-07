@@ -10,7 +10,7 @@ const app = express();
 app.use(bodyParser.json()); //Allows JSON read.
 app.use(cors()); //Allow cross-origin requests.
 
-//Contains authentication API endpoints.
+//Contains resource API endpoints.
 
 //>>SET UP>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 

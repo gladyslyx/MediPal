@@ -28,6 +28,9 @@ https://youtu.be/_RtpUaBSie0
 Thank you to this guy! For password hashing.
 https://youtu.be/Ud5xKCYQTjM
 
+Thank you to this guy! For JWT implementation and authentication.
+https://youtu.be/mbsmsi7l3r4
+
 Thank you to my teammates! For going through all this together!
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<MY_INPUTS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -35,7 +38,7 @@ Thank you to my teammates! For going through all this together!
 I suggest you use the tabs on the left to close functions.
 Makes it easier to read the code.
 
-Right now, the comments are a mess, but I'll clean it up, frfr.
+Right now, the comments are a mess, but I'll clean it as I go along.
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<EXECUTION>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -56,13 +59,26 @@ CMD: npm run dev
 
 /register
  * Registers email and password to the database.
- * Returns 1 if successful, 0 if unsuccessful.
- * Returns relevant status codes.
+ * Success: Inserts email, hashed password and refresh token to database.
+ * Success: Returns access token, refresh token, success: true and status code (200).
+ * Failure: Returns success: false and a status code (400-500).
 
  /login
  * Checks if email exists, and if password matches the email.
- * Returns 1 if successful, 0 if unsuccessful.
- * Returns relevant status codes.
+ * Success: Returns access token, refresh token, success: true and status code (200).
+ * Failure: Returns success: false and a status code (400-500).
+
+ /refresh
+ * Verifies refresh token, and if valid, generates new access token.
+ * Should be called when access token expires, and client has a valid refresh token.
+ * Success: Returns access token, success: true and status code (200).
+ * Failure: Returns success: false and a status code (400-500).
+
+ /logout
+ * Removes refresh token from the database.
+ * Success: Removes refresh token from database.
+ * Success: Returns success: true and status code (200).
+ * Failure: Returns success: false and a status code (400-500).
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<TOOLS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
