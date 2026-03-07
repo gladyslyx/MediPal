@@ -2,7 +2,7 @@ POST http://localhost:3000/register
 Content-Type: application/json
 
 {
-    "EMAIL": "newtest@example.com",
+    "EMAIL": "myEmail@example.com",
     "PASSWORD": "password123"
 }
 
@@ -14,4 +14,22 @@ Content-Type: application/json
 {
     "EMAIL": "test@example.com",
     "PASSWORD": "password123"
+}
+
+###
+
+POST http://localhost:3000/refresh
+Content-Type: application/json
+
+{
+    "REFRESHTOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFTUFJTCI6Im15RW1haWxAZXhhbXBsZS5jb20iLCJpYXQiOjE3NzI4NTY3NTZ9.hWSAVjQMiBAZPixgbmp0eRoWWwoFEY7sr5gVjYY8BvY"
+}
+
+###
+
+POST http://localhost:3000/logout
+Content-Type: application/json
+
+{
+    "REFRESHTOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFTUFJTCI6Im15RW1haWxAZXhhbXBsZS5jb20iLCJpYXQiOjE3NzI4NTY3NTZ9.hWSAVjQMiBAZPixgbmp0eRoWWwoFEY7sr5gVjYY8BvY"
 }

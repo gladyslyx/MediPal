@@ -1,0 +1,19 @@
+import sqlite3 from 'sqlite3';
+const sql3 = sqlite3.verbose();
+
+//Don't touch anything here.
+
+//Connect to database: Read/Write operations. Run 'connected' function.
+const DB =  new sql3.Database('./Database', sqlite3.OPEN_READWRITE, connected)
+
+//Error handling.
+function connected(err){
+ if(err){
+    console.log('Error: connected: DBConnect: ', err.message);
+    return 
+ }
+
+ console.log('Connected to database...')
+} 
+
+export {DB};

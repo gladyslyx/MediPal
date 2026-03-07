@@ -99,11 +99,11 @@ function Form() {
       const result = await response.json();
 
       //Check response.
-      if (result == 1) {
+      if (result.success) {
         console.log('Status: ',result.status);
         navigate();
       }
-      else if (result == 0 && response.status == 401) { 
+      else if (!result.success && response.status == 401) { 
         console.log('Status: ',result.status);
         displayErr("Wrong email or password.");
       }

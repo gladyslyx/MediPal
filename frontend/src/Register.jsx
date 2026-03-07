@@ -126,11 +126,11 @@ function Form(){
         });
         const result = await response.json();
 
-        if (result == 1) {
+        if (result.success) {
         console.log("Status: ", response.status);
         navigate();
         }
-        else if (result == 0 && response.status == 409) 
+        else if (!result.success && response.status == 409) 
           displayErr("Email already exists!"); //Conflict: Email already exists.
         else displayErr("Error: Registration failed!");
 
