@@ -22,22 +22,33 @@ Note: If this is your first time, write "npm install" to install missing depende
 
 ## BACKEND
 ### Background  
-This section currently primarily handles the database and API's.  
-Uses Node and SQLite.  
+This section currently primarily handles the database and APIs.  
+Uses Node, Express and SQLite.  
 
+Authentication Server:
 Listening port: 3000  
 URL: http://localhost:3000  
+DESC: Handles user authentication and creation/deletion of tokens.
+CMD: npm run authServer
+
+Resource Server:
+Listening port: 4000  
+URL: http://localhost:3000  
+DESC: Handles retrieval of user data from database.
+CMD: npm run resServer
 
 ### Execution  
-To open database connection:  
+To open server APIs:  
 1. Use the terminal, navigate to the folder "backend".  
 <img src="./DemoImages/NaviToBackend.png" width="500">
 
 Tip: Use command "dir" to find where you are.  
 <img src="./DemoImages/DirTip.png" width="500">
 
-2. Write "node DBAccessor" into terminal.  
-<img src="./DemoImages/NodeDBAccessor.png" width="500">
+2. Write the CMD for whichever server you need. 
+<img src="./DemoImages/npmRunAuthServer.png" width="500">
+
+<img src="./DemoImages/npmRunResServer.png" width="500">
 The response message should look similar to the above.  
 
 3. To close connect hold "ctrl" + "c".  
