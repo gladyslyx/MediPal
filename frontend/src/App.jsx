@@ -7,6 +7,8 @@ import Homepage from "./Homepage.jsx";
 import UserProfile from "./UserProfile.jsx";
 import ProfileSelection from "./ProfileSelection.jsx";
 import CreateProfile from "./CreateProfile.jsx";
+import MedHomepage from "./MedHomepage.jsx";
+import MedReqAccess from "./MedReqAccess.jsx";
 
 //Web application runner.
 function App() {

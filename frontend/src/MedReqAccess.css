@@ -1,0 +1,106 @@
+/* Background overlay */
+
+.request-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    background: rgba(0,0,0,0.3);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Popup container */
+
+.request-container {
+    background: #F2F2F2;
+    width: 600px;
+    padding: 30px;
+    border-radius: 40px;
+
+    position: relative;
+}
+
+/* Close button */
+
+.close-btn {
+    position: absolute;
+    right: 25px;
+    top: 20px;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+/* Title */
+
+.request-title {
+    font-size: 36px;
+    margin-bottom: 5px;
+}
+
+.request-subtitle {
+    color: #777;
+    margin-bottom: 15px;
+}
+
+/* Search section */
+
+.search-section {
+    margin-top: 20px;
+}
+
+.search-section label {
+    font-size: 18px;
+}
+
+/* Search input */
+
+.search-box {
+    display: flex;
+    align-items: center;
+
+    border: 1px solid #ccc;
+    border-radius: 12px;
+
+    padding: 8px 12px;
+    margin-top: 8px;
+}
+
+.search-icon {
+    margin-right: 8px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+}
+
+/* Button */
+
+.request-btn-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.send-request-btn {
+    background: #8B8175;
+    color: white;
+
+    border: none;
+    padding: 12px 40px;
+
+    border-radius: 30px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.send-request-btn:hover {
+    opacity: 0.9;
+}
