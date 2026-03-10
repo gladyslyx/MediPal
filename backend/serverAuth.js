@@ -57,20 +57,16 @@ function generateRefreshToken(user) {
 app.post('/register', async (req, res) => {
     res.set('content-type', 'application/json');
 
-    //SQL CMD: Insert new email and password.
-    const sqlCheck = 'SELECT * FROM USERLOGINTABLE WHERE EMAIL=?'; 
+    //SQL CMD: check if email already exists in database.
+    const sqlCheck = 'SELECT ID FROM USERLOGINTABLE WHERE EMAIL=?'; 
 
     //SQL CMD: Insert new email and password.
     const sqlInsert = 'INSERT INTO USERLOGINTABLE(EMAIL, PASSWORD) VALUES (? , ?)'; 
-
-        //SQL CMD: Update refresh token for user.
-    const sqlRefreshToken = 'UPDATE USERLOGINTABLE SET REFRESHTOKEN=? WHERE EMAIL=?';
 
     try{
         //SQL to DB: Check if email already exists.
         DB.all(sqlCheck, [req.body.EMAIL], async (err, rows)=>{
             if(err) return res.status(400).send({ success: false });//Err: Bad Req.
-
             if (rows.length > 0) return res.status(409).send({ success: false });//Err: Conflict: Email already exists.
             
             //Hash password. Salt rounds: 10.
@@ -80,16 +76,23 @@ app.post('/register', async (req, res) => {
             DB.run(sqlInsert, [req.body.EMAIL, hashedPassword], function(err){
                 if(err) return res.status(500).send({ success: false });//Err: Server Err.
             
-                //Create access token and refresh token.
-                const accessToken = generateAccessToken({ EMAIL: req.body.EMAIL });
-                const REFRESHTOKEN = generateRefreshToken({ EMAIL: req.body.EMAIL });
-                
-                // Update the refresh token in the database
-                DB.run(sqlRefreshToken, [REFRESHTOKEN, req.body.EMAIL], (err) => {
-                    if (err) return res.status(500).send({ success: false });//Err: Server Err.
-                    return res.status(200).send({ success: true, accessToken, REFRESHTOKEN });//Success: Authorized.
-                });
-                return;
+                //Get ID.
+                DB.all(sqlCheck, [req.body.EMAIL], async (err, rows)=>{
+                    if(err) return res.status(500).send({ success: false });//Err: Server Err.
+                    
+                    //Create access token and refresh token.
+                    const accessToken = generateAccessToken({ ID: rows[0].ID });
+                    const REFRESHTOKEN = generateRefreshToken({ ID: rows[0].ID });
+
+                    //SQL CMD: Update refresh token for user.
+                    const sqlRefreshToken = 'UPDATE USERLOGINTABLE SET REFRESHTOKEN=? WHERE ID=?';
+
+                    // Update the refresh token in the database
+                    DB.run(sqlRefreshToken, [REFRESHTOKEN, rows[0].ID], (err) => {
+                        if (err) return res.status(500).send({ success: false });//Err: Server Err.
+                        return res.status(200).send({ success: true, accessToken, REFRESHTOKEN });//Success: Authorized.
+                    });  
+                })
             })
         })        
     }
@@ -105,10 +108,7 @@ app.post('/login', (req, res) => {
     res.set('content-type', 'application/json');
 
     //SQL CMD: Find user based on EMAIL.
-    const sql = 'SELECT * FROM USERLOGINTABLE WHERE EMAIL=?'; 
-
-    //SQL CMD: Update refresh token for user.
-    const sqlRefreshToken = 'UPDATE USERLOGINTABLE SET REFRESHTOKEN=? WHERE EMAIL=?';
+    const sql = 'SELECT ID, PASSWORD FROM USERLOGINTABLE WHERE EMAIL=?'; 
 
     try{
         //SQL to DB: Check if email exists.
@@ -116,23 +116,22 @@ app.post('/login', (req, res) => {
             if(err) return res.status(400).send({ success: false }); //Err: Bad Req.
 
             //If email exists, compare password.
-            if (rows.length > 0){
-                //Compare hashed password with input password.
-                if(await bcrypt.compare(req.body.PASSWORD, rows[0].PASSWORD))
-                {
-                    //Create access token and refresh token.
-                    const accessToken = generateAccessToken({ EMAIL: req.body.EMAIL });
-                    const REFRESHTOKEN = generateRefreshToken({ EMAIL: req.body.EMAIL });
-                        
-                    // Update the refresh token in the database
-                    DB.run(sqlRefreshToken, [REFRESHTOKEN, req.body.EMAIL], (err) => {
-                        if (err) return res.status(500).send({ success: false });//Err: Server Err.
-                        return res.status(200).send({ success: true, accessToken, REFRESHTOKEN });//Success: Authorized.
-                    });
-                    return;
-                }
+            if (rows.length > 0 && await bcrypt.compare(req.body.PASSWORD, rows[0].PASSWORD))
+            {
+                //Create access token and refresh token.
+                const accessToken = generateAccessToken({ ID: rows[0].ID });
+                const REFRESHTOKEN = generateRefreshToken({ ID: rows[0].ID });
+
+                //SQL CMD: Update refresh token for user.
+                const sqlRefreshToken = 'UPDATE USERLOGINTABLE SET REFRESHTOKEN=? WHERE ID=?';
+
+                // Update the refresh token in the database
+                DB.run(sqlRefreshToken, [REFRESHTOKEN, rows[0].ID], (err) => {
+                    if (err) return res.status(500).send({ success: false });//Err: Server Err.
+                    return res.status(200).send({ success: true, accessToken, REFRESHTOKEN });//Success: Authorized.
+                });
             }
-            return res.status(401).send({ success: false });//Err: Unauthorized: Wrong email or password.
+            else return res.status(401).send({ success: false });//Err: Unauthorized: Wrong email or password.
         })
     }
     catch(err){res.status(500).send({ success: false })}//Err: Server Err.

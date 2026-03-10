@@ -29,3 +29,25 @@ app.get('/', (req, res) =>{
 })
 
 //>>API ENDPOINTS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+app.post('/createProfile', async (req, res) => {
+
+    const accessToken = req.body.accessToken;
+
+    //SQL CMD: Insert new profile.
+    const sql = 'INSERT INTO USERSTATICDATA(ID, PROFILE, DOB, AGE, GENDER, HEIGHT, WEIGHT, BMI) VALUES (? , ? , ? , ? , ? , ? , ? , ?)'; 
+
+    jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if(err) return res.status(401).send({ success: false });//Err: Unauthorized: Invalid access token.
+
+        
+
+        try{
+            DB.run(sql, [user.ID, req.body.DOB, null, null, null, null, null, null], (err) => {
+                if(err) return res.status(500).send({ success: false });//Err: Server Err.
+                return res.status(200).send({ success: true });//Success: Profile created.
+            });
+        } catch(err){res.status(500).send({ success: false })}//Err: Server Err.
+    })
+
+})

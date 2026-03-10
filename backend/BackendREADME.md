@@ -15,10 +15,9 @@ Add /getNewAccessToken API to obtain new access tokens periodically before expir
 This API should verify the refresh token.
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<WARNING>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
 Do NOT touch package.json.
 Do NOT touch package-lock.json.
-
-DB EMAILS have unique constraint.
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<THANK_YOU>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -79,6 +78,66 @@ CMD: npm run dev
  * Success: Removes refresh token from database.
  * Success: Returns success: true and status code (200).
  * Failure: Returns success: false and a status code (400-500).
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<DATABASE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+TABLE: USERLOGINTABLE
+* DESC: Keeps user login and session data.
+
+* COLUMNS:
+    1. ID : INT 
+        * CONSTRAINT: PRIMARY KEY : AUTOINCREMENT : UNIQUE
+        * DESC: Unique account identifier.
+    2. EMAIL : INT
+        * CONSTRAINT: UNIQUE
+        * DESC: Unique account email.
+    3. PASSWORD : TEXT 
+        * DESC: Encrypted account password.
+    4. REFRESHTOKEN : TEXT 
+        * DESC: Account session validity.
+
+TABLE: USERSTATICDATA
+* DESC: Keeps static user data.
+
+* COLUMNS:
+    1. ID : INT
+        * CONSTRAINT: PRIMARY KEY : FOREIGN KEY
+    2. PROFILE : TEXT 
+        * DESC: Profile identifier under an account.
+    3. DOB : TEXT
+        * DESC: Profile date of birth. ISO-8601 standard, YYYY-MM-DD.
+    4. AGE: INT
+        * CALCULATION: 
+            * If (current DD:MM >= DOB DD:MM) then (Current year - DOB year).
+            * else (current year - DOB year - 1).
+        * DESC: Profile age. 
+    5. GENDER : TEXT 
+    6. HEIGHT : NUMERIC
+        * UNIT: Metres, m.
+    7. WEIGHT : NUMERIC 
+        * UNIT: Kilograms, kg.
+    8. BMI : NUMERIC
+        * CALCULATION: (weight / height^2). 
+        * DESC: Profile BMI for given weight and height.
+
+TABLE: USERTIMEDDATA
+DESC: Keeps continuous data. Largely read from external devices.
+
+COLUMNS:
+1. ID : INT
+    * CONSTRAINT: PRIMARY KEY : FOREIGN KEY
+2. PROFILE : TEXT
+3. DATE : TEXT
+    * DESC: Date of entry. Follows ISO-8601 standard, YYYY-MM-DD.
+4. TIME: TEXT 
+    * DESC: Time of entry. Follows ISO-8601 standard, HH:MM:SS.
+5. STEPS : INT
+6. HEARTRATE : NUMERIC
+7. SLEEPTIME : INT
+8. CALORIESBURNT : NUMERIC
+9. BLOODOXYGEN : NUMERIC
+10. STRESSLVL : INT
+
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<TOOLS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
