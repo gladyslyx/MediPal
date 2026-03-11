@@ -92,7 +92,8 @@ app.post('/register', async (req, res) => {
 /** /login
  * Checks if email exists, and if password matches the email.
  * Requires: EMAIL, PASSWORD.
- * Success: Returns account ID and status code (200).
+ * Success, at least 1 profile exists: Returns full token, success: true, isHalf: false and status code (200).
+ * Success, no profiles exists: Returns half token, success: true, isHalf: true and status code(200).
  * Failure: Returns success: false and a status code (400-500).
  */
 app.post('/login', (req, res) => {

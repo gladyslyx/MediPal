@@ -1,18 +1,5 @@
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<TO_DO>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-Create column for refresh token in user login table.
-Access tokens will expire with time. Will be stored as local variables using exported functions.
-Refresh tokens will be held in database for server side and httponly cookie for client side
-
-Modify /login API to pass access token and refresh token to user.
-Modify /register API to pass access token and refresh token to user.
-
-Add /logout API to remove refresh token
-Note: Removal of access token should be done locally on frontend. I.e.: accessToken = null.
-
-Add /verifyToken API to verify validity of access token.
-
-Add /getNewAccessToken API to obtain new access tokens periodically before expiry.
-This API should verify the refresh token.
+Make homepage dynamic.
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<WARNING>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -54,30 +41,72 @@ PORT: http://localhost:4000
 To run both servers on the same terminal:
 CMD: npm run dev
 
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<TOOLS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+POSTMAN - Used to test DB endpoint APIs.
+Rest Client Extension - Used to test DB endpoint APIs.
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<PROCESS_OVERVIEW>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Registration:
+
+        USER ------> REGISTER API : Register Page
+                          |
+                          V
+                      LOGIN API : Register Page //Done to retrieve half token.
+                          |  
+                          V
+                    [No Profile]
+                          | 
+                          V
+                  CREATE PROFILE API : Create Profile First Page
+                          |
+                          V
+                      Home Page
+
+Login:
+
+        USER ---------------> LOGIN API : Login Page
+                                  |
+(No Profile, Half Token)          V
+         |<---------------- [Find Profile]
+         |                        |
+         |                        | (Atleast 1 profile, Full Token)  
+         V                        V
+CREATE PROFILE API ----------> Home Page
+: Create Profile First Page
+
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<API>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+SERVER: serverAuth
 /register
  * Registers email and password to the database.
+ * Requires: EMAIL, PASSWORD.
  * Success: Inserts email, hashed password and refresh token to database.
- * Success: Returns access token, refresh token, success: true and status code (200).
+ * Success: Returns status code (200).
  * Failure: Returns success: false and a status code (400-500).
 
  /login
  * Checks if email exists, and if password matches the email.
- * Success: Returns access token, refresh token, success: true and status code (200).
+ * Requires: EMAIL, PASSWORD.
+ * Success, at least 1 profile exists: Returns full token, success: true, isHalf: false and status code (200).
+ * Success, no profiles exists: Returns half token, success: true, isHalf: true and status code(200).
  * Failure: Returns success: false and a status code (400-500).
 
- /refresh
- * Verifies refresh token, and if valid, generates new access token.
- * Should be called when access token expires, and client has a valid refresh token.
- * Success: Returns access token, success: true and status code (200).
+SERVER: serverRes
+/createProfile
+ * Creates a new profile for the user.
+ * Requires: accessToken, PROFILE, DOB, GENDER, HEIGHT, WEIGHT.
+ * Success: Inserts profile data into database.
+ * Success: Returns success: true, full token and a status code (200).
  * Failure: Returns success: false and a status code (400-500).
 
- /logout
- * Removes refresh token from the database.
- * Success: Removes refresh token from database.
- * Success: Returns success: true and status code (200).
- * Failure: Returns success: false and a status code (400-500).
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<GLOSSARY>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+DB - Database
+err - Error
+req - Request
+res - Response
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<DATABASE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -132,19 +161,6 @@ COLUMNS:
 8. CALORIESBURNT : NUMERIC
 9. BLOODOXYGEN : NUMERIC
 10. STRESSLVL : INT
-
-
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<TOOLS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-POSTMAN - Used to test DB endpoint APIs.
-Rest Client Extension - Used to test DB endpoint APIs.
-
-<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<GLOSSARY>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-DB - Database
-err - Error
-req - Request
-res - Response
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<PACKAGES>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 

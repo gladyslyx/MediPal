@@ -34,7 +34,7 @@ app.get('/', (req, res) =>{
  * Creates a new profile for the user.
  * Requires: accessToken, PROFILE, DOB, GENDER, HEIGHT, WEIGHT.
  * Success: Inserts profile data into database.
- * Success: Returns success: true and a status code (200).
+ * Success: Returns success: true, full token and a status code (200).
  * Failure: Returns success: false and a status code (400-500).
  */
 app.post('/createProfile', async (req, res) => {
@@ -107,6 +107,7 @@ app.post('/createProfile', async (req, res) => {
     } else return res.status(401).send({ success: false });//Err: Unauthorized: Access token not found.
 })
 
+//NOT DONE
 app.post('/getProfiles', async (req, res) => {
 
     const accessToken = req.body.accessToken;

@@ -18,6 +18,18 @@ To run frontend:
 2. run "npm install" (If you have missing dependencies).
 3. run "npm run dev"
 
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<PROCESS_OVERVIEW>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Registration, login and creation of first profile:
+
+   REGISTER PAGE <-------- USER --------> LOGIN PAGE
+          |                                    |
+          V          (No Profile)              V
+          ---------------->|<----------- [Find Profile]
+                           |                   | (Have Profile)
+                           V                   V
+                       CREATE PROFILE ------> HOME
+
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<PACKAGES>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 To create package.json (i.e: Become executable):
