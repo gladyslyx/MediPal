@@ -82,7 +82,8 @@
 // }
 
 
-import "./CreateProfile.css";
+import "./CSS/CreateProfile.css";
+import { useState } from "react";
 
 export default function CreateProfile() {
     return (
@@ -120,7 +121,7 @@ export default function CreateProfile() {
                     <label>Date of Birth</label>
                     <input
                         type="text"
-                        placeholder="29th Aug 1995"
+                        placeholder="YYYY-MM-DD"
                     />
                 </div>
 
@@ -129,7 +130,7 @@ export default function CreateProfile() {
                     <label>Height</label>
                     <input
                         type="text"
-                        placeholder="160 cm"
+                        placeholder="1.60 m"
                     />
                 </div>
 
@@ -158,10 +159,7 @@ export default function CreateProfile() {
     );
 }
 
-import "./CreateProfile.css";
-import { useState } from "react";
-
-export default function CreateProfile() {
+function CreateProfile2() { //What is this for?
     const [gender, setGender] = useState("");
 
     return (

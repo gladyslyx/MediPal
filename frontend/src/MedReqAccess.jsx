@@ -1,4 +1,4 @@
-import "./RequestAccess.css";
+import "./CSS/MedReqAccess.css";
 
 export default function RequestAccess({ onClose }) {
     return (

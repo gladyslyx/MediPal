@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import "./LoginRegister.css";
+import "./CSS/LoginRegister.css";
 
 const API_REGISTER = 'http://localhost:3000/register ';
 

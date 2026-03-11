@@ -1,4 +1,4 @@
-import "./ProfileSelection.css";
+import "./CSS/ProfileSelection.css";
 
 export default function ProfilesPopup({ onClose }) {
     return (

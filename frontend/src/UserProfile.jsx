@@ -1,4 +1,4 @@
-import "./UserProfile.css";
+import "./CSS/UserProfile.css";
 
 export default function UserProfile({ onClose }) {
     return (

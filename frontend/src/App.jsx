@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { BrowserRouter,Routes,Route,Navigate } from 'react-router-dom';
-import "./App.css";
 import Login from "./Login.jsx"
 import Register from './Register.jsx';
 import Homepage from "./Homepage.jsx";

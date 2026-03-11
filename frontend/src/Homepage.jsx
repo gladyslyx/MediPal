@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import "./Homepage.css";
+import "./CSS/Homepage.css";
 
 //Root Component: /home
 export default function Homepage() {

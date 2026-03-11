@@ -1,4 +1,4 @@
-import "./MedHomepage.css";
+import "./CSS/MedHomepage.css";
 import UserProfile from "./UserProfile";
 
 export default function Homepage() {
