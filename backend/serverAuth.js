@@ -34,7 +34,7 @@ app.get('/', (req, res) =>{
  * Full Payload: ACCOUNTID, PROFILEID.
  * Half Payload: ACCOUNTID.
 */
-function generateAccessToken(user) {
+export function generateAccessToken(user) {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
 }
 
@@ -153,96 +153,20 @@ app.post('/login', (req, res) => {
     catch(err){res.status(500).send({ success: false })}//Err: Server Err.
 })
 
-/** /generateTokens
- * Generates new access and refresh tokens for a user.
- * Requires: ACCOUNTID, PROFILEID.
- * Success: Returns tokens and success: true.
- * Failure: Returns success: false and a status code (400-500).
+/** /verifyToken
+ * Verifies the authenticity of the access token.
+ * Requires: accessToken.
+ * Success: Returns success: true and a status code (200).
+ * Failure: Returns success: false and a status code (401-500).
  */
-app.post('/generateTokens', async (req, res) => {
-
-    //Create access token and refresh token.
-    const accessToken = generateAccessToken({ ACCOUNTID: req.body.ACCOUNTID, PROFILEID: req.body.PROFILEID });
-    const REFRESHTOKEN = generateRefreshToken({ ACCOUNTID: req.body.ACCOUNTID, PROFILEID: req.body.PROFILEID });
-
-    //SQL CMD: Update refresh token for user.
-    const sqlRefreshToken = 'UPDATE USERLOGINTABLE SET REFRESHTOKEN=? WHERE ACCOUNTID=?';
-
-    try{
-    // Update the refresh token in the database
-    DB.run(sqlRefreshToken, [REFRESHTOKEN, req.body.ACCOUNTID], (err) => {
-        if (err) return res.status(500).send({ success: false });//Err: Server Err.
-        return res.status(200).send({ success: true, accessToken, REFRESHTOKEN });//Success: Authorized.
-        })
-    }
-    catch(err){res.status(500).send({ success: false })}//Err: Server Err.
-});
-
-
-/** /refresh
- * Verifies refresh token, and if valid, generates new access token.
- * Should be called when access token expires, and client has a valid refresh token.
- * Requires: REFRESHTOKEN.
- * Success: Returns access token, success: true and status code (200).
- * Failure: Returns success: false and a status code (400-500).
- */
-app.post('/refresh', (req, res) => {
+app.post('/verifyToken', (req, res) => {
     res.set('content-type', 'application/json');
+    const accessToken = req.body.accessToken;
 
-    const REFRESHTOKEN = req.body.REFRESHTOKEN;
-    
-    //SQL CMD: Check if refresh token exists in database.
-    const sql = 'SELECT * FROM USERLOGINTABLE WHERE REFRESHTOKEN=?'; 
-
-    //Check if refresh token is null.
-    if (REFRESHTOKEN == null) return res.status(401).send({ success: false });//Err: Unauthorized: No token.
-
-    try{
-        //SQL to DB: Check if refresh token exists in database.
-        DB.all(sql, [REFRESHTOKEN], (err, rows)=>{
-            if(err) return res.status(400).send({ success: false });//Err: Bad Req.
-
-            if (rows.length > 0)
-                //Verify refresh token.
-                jwt.verify(REFRESHTOKEN, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-                    if (err) return res.status(403).send({ success: false });//Err: Forbidden: Invalid token.
-                    
-                    //Generate new access token.
-                    const accessToken = generateAccessToken({ ACCOUNTID: user.ACCOUNTID });
-                    return res.status(200).send({ success: true, accessToken });//Success: Authorized. 
-                })
-            else return res.status(403).send({ success: false });//Err: Forbidden: Token not found in database.
-        })
-    }
-    catch(err){res.status(500).send({ success: false })}//Err: Server Err.
-})
-
-/** /logout
- * Removes refresh token from the database.
- * Success: Removes refresh token from database.
- * Success: Returns success: true and status code (200).
- * Failure: Returns success: false and a status code (400-500).
- */
-app.post('/logout', (req, res) => {
-    res.set('content-type', 'application/json');  
-
-    const REFRESHTOKEN = req.body.REFRESHTOKEN;
-    if (REFRESHTOKEN == null) return res.status(400).send({ success: false });//Err: Bad Req: No token.
- 
-    //SQL CMD: Remove refresh token from database.
-    const sql = 'UPDATE USERLOGINTABLE SET REFRESHTOKEN=NULL WHERE REFRESHTOKEN=?';
-
-    try{
-        //SQL to DB: Remove refresh token from database.
-        DB.run(sql, [REFRESHTOKEN], function(err){
-            if(err) return res.status(500).send({ success: false });//Err: Server Err.
-            
-            //Detect if a row was updated (i.e. if the token was found and removed).
-            if(this.changes == 1) return res.status(200).send({ success: true });//Success: Logged out.
-            else return res.status(400).send({ success: false });//Err: Bad Req: Token not found.
-        })
-    }
-    catch(err){res.status(500).send({ success: false })}//Err: Server Err.
+    jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err) => {
+        if(err) return res.status(401).send({ success: false });//Err: Unauthorized: Invalid access token.
+        return res.status(200).send({ success: true });//Success: Authorized.
+    });
 })
 
 {/*

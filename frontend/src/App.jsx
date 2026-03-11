@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { BrowserRouter,Routes,Route,Navigate } from 'react-router-dom';
 import Login from "./Login.jsx"
 import Register from './Register.jsx';
-import registerProfile from "./CreateProfileFirst.jsx";
+import RegisterProfile from "./CreateProfileFirst.jsx";
 import Homepage from "./Homepage.jsx";
 import UserProfile from "./UserProfile.jsx";
 import ProfileSelection from "./ProfileSelection.jsx";
@@ -26,7 +26,7 @@ function App() {
       <Route path='/register' element={<Register/>}/>
 
       {/*Src: FirstTimeRegistry. Dest: Login. */}
-      <Route path='/firstProfile' element={<registerProfile/>}/>
+      <Route path='/firstProfile' element={<RegisterProfile/>}/>
 
       {/*Src: Login. Dest: User Profile */}
       <Route path='/home' element={<Homepage/>}/>

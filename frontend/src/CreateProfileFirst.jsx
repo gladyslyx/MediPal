@@ -1,34 +1,48 @@
 import "./CSS/CreateProfile.css";
+import "./CSS/Err.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import "./clientSession.jsx";
+import { setAccessToken, getAccessToken, displayErr } from "./clientSession.jsx";
 
-const API_REGISTER = 'http://localhost:3000/register';
+const accessToken = getAccessToken();
+
+const API_VERIFY_TOKEN = 'http://localhost:3000/verifyToken';
+const API_LOGIN = 'http://localhost:3000/login';
 const API_CREATE_PROFILE = 'http://localhost:4000/createProfile';
 
-//Data from register page.
-const dataReg = localStorage.getItem('data');
+export default function RegisterProfile() {
 
-export default function registerProfile() {
-
-    const [gender, setGender] = useState("");
-
-    /** [ Helper Function ] 
-    * Displays error message on the form.
-    */
-    const displayErr = (msg) =>{
-        var err = document.getElementById("err");
-        err.textContent = msg;
-        err.style.display = 'inline';
-    };
-
-    /**[ Helper Function ]
-     * Validates data entry.
-     * Handles early data entry errors.
+    /** [ Helper Function ]
+     * Verifies access token validity.
+     * Redirects to login page if token is invalid or not found.
      */
-    const validateFormData = () => {
+    const verifyAccessToken = async () => {
 
+        if(!accessToken){
+            nav('/login');
+        }
+        else{
+            try{
+                //Payload.
+                const res = await fetch(API_VERIFY_TOKEN, {
+                method: 'POST',
+                headers:{'Content-Type': 'application/json'},
+                body: JSON.stringify({ accessToken }),
+                });
+                const result = await res.json();
+
+                if (!result.success) {
+                    nav('/login');
+                }
+            }
+            catch(err){"Error: CreateProfileFirst: verifyAccessToken: ", err.message}
+        }
     }
+
+    const nav = useNavigate()
+    const navigate = () =>{
+    nav('/home')
+    };
 
     /** [ Feature Function ] 
     * Called when submitting form data.
@@ -36,67 +50,73 @@ export default function registerProfile() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        if(validateFormData() == 1){
         const formData = new FormData(event.target);
         const dataObject = Object.fromEntries(formData);
 
         sendDataToBackend(dataObject);
-        }
     }
 
     /** [ Backend Function ] 
      * Sends data to backend.
      * Handles late data entry errors.
      */
-    const sendDataToBackend = async (dataProf) => {
+    const sendDataToBackend = async (data) => {
         try{
-            //Payload.
-            const res1 = await fetch(API_REGISTER, {
-            method: 'POST',
-            headers:{'Content-Type': 'application/json'},
-            body: JSON.stringify(dataReg),
-            });
-            const resultReg = await res1.json();
+            /**
+             * Steps:
+             * 1. Create new profile with form data.
+             * 2. Get full token.
+             * 3. Navigate to home page.
+             */
 
-            //Get dummy token from register response.
-            //Used to complete create profile request.
-            const accessToken = resultReg.dummyToken;
-
-            //Payload.
+            //1. Create new profile with form data.
             const response = await fetch(API_CREATE_PROFILE, {
             method: 'POST',
             headers:{'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`},
-            body: JSON.stringify(dataProf),
+            body: JSON.stringify(data),
             });
             const result = await response.json();
 
+            if(result.success){
+                setAccessToken(result.accessToken);//2. Get full token.
+                navigate();//3. Navigate to home page.
+            }
+            else displayErr('Error: Create profile failed!');
         }
         catch(err){"Error: Register: Register: ", err.message}
     };
 
     return (
+        window.onload = verifyAccessToken(),
+
         <div className="create-profile-page">
             <div className="create-profile-card">
 
+                {/* Title */}
                 <h2 className="create-profile-title">Create Profile</h2>
                 <p className="create-profile-subtitle">Please fill up your details</p>
 
+                {/*Error Message Display.*/}
+                <h3 id="err" className="err"></h3>
+
+                {/* Form */}
                 <form className="create-profile-form" onSubmit={handleSubmit}>
 
+                    {/* Name */}
                     <FormGroup label="Name">
-                        <input type="text" placeholder="Olivia Brown" />
+                        <input type="text" minLength={1} maxLength={30} placeholder="Olivia Brown" name="PROFILE" required/>
                     </FormGroup>
 
+                    {/* Gender */}
                     <div className="form-group">
                         <label>Gender</label>
 
-                        <div className="radio-group">
+                        <div className="radio-group" required>
                             <label>
                                 <input
                                     type="radio"
-                                    name="gender"
+                                    name="GENDER"
                                     value="Male"
-                                    onChange={() => setGender("Male")}
                                 />
                                 Male
                             </label>
@@ -104,38 +124,41 @@ export default function registerProfile() {
                             <label>
                                 <input
                                     type="radio"
-                                    name="gender"
+                                    name="GENDER"
                                     value="Female"
-                                    onChange={() => setGender("Female")}
                                 />
                                 Female
                             </label>
                         </div>
                     </div>
 
+                    {/* DOB */}
                     <FormGroup label="Date of Birth">
-                        <input type="text" placeholder="YYYY-MM-DD" />
+                        <input type="date" placeholder="YYYY-MM-DD" name="DOB" required/>
                     </FormGroup>
 
-                    <FormGroup label="Height">
-                        <input type="text" placeholder="1.6 m" />
+                    {/* Height */}
+                    <FormGroup label="Height (Metres, m)">
+                        <input type="number" min="0.01" max="3" step="0.01" placeholder="1.6" name="HEIGHT" required/>
                     </FormGroup>
 
-                    <FormGroup label="Weight">
-                        <input type="text" placeholder="57 kg" />
+                    {/* Weight */}
+                    <FormGroup label="Weight (Kilograms, kg)">
+                        <input type="number" min="0.1" step="0.1" placeholder="60" name="WEIGHT" required/>
                     </FormGroup>
 
+                    {/* TOS */}
                     <div className="checkbox-group">
                         <input type="checkbox" />
                         <span>
                             I agree to Terms and Conditions and Privacy Policy
                         </span>
                     </div>
-
-                    <button type="button" className="create-profile-btn">
+        
+                    {/* Submit Button */}
+                    <button type="submit" className="create-profile-btn">
                         Create Profile
                     </button>
-
                 </form>
             </div>
         </div>

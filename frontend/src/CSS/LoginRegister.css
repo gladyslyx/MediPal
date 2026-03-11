@@ -88,12 +88,6 @@ h1 {
   cursor: pointer;
 }
 
-.err {
-  text-align: center;
-  color:#a60000;
-  display: none;
-}
-
 .submit-btn {
   width: 100%;
   padding: 12px;

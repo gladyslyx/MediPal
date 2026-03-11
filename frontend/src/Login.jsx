@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "./CSS/LoginRegister.css";
-import { setAccessToken } from"./clientSession.jsx";
+import "./CSS/Err.css";
+import { setAccessToken, displayErr } from"./clientSession.jsx";
 
 const API_LOGIN = 'http://localhost:3000/login';
 const API_GET_PROFILES = 'http://localhost:4000/getProfiles';
@@ -29,15 +30,6 @@ export default function Login(){
     </div> 
   );
 }
-
-/** [ Feature Function ] 
- * Displays error message on the form.
-*/
-function displayErr(msg) {
-  var err = document.getElementById("err")
-  err.textContent = msg;
-  err.style.display = 'block';
-};
 
 //<<<<<<Switcher Handler>>>>>>
 function Switcher() {

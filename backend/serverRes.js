@@ -3,8 +3,8 @@ import express from 'express';
 import bodyParser from 'body-parser'
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
 import 'dotenv/config'; 
+import { generateAccessToken } from "./serverAuth.js";
 
 const app = express();
 app.use(bodyParser.json()); //Allows JSON read.
@@ -28,26 +28,6 @@ app.get('/', (req, res) =>{
     res.status(200).send('OK. Resource server is running...');
 })
 
-//>>FUNCTIONS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-
-  // The header value is "Bearer TOKEN".
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (token == null) {
-    return res.sendStatus(401); // No token
-  }
-
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if(err) return res.sendStatus(403); // Invalid token
-    req.user = user; // Attach user info to request object
-    next(); // Proceed to the next middleware or route handler
-    });
-    
-}
-
 //>>API ENDPOINTS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 /** /createProfile
@@ -59,31 +39,72 @@ function authenticateToken(req, res, next) {
  */
 app.post('/createProfile', async (req, res) => {
 
-    const accessToken = req.body.accessToken;
+    //>> Set Up >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    const PROFILE = req.body.PROFILE;
+    const DOB = req.body.DOB;
+    const GENDER = req.body.GENDER;
+    const HEIGHT = req.body.HEIGHT;
+    const WEIGHT = req.body.WEIGHT;
 
     //SQL CMD: Check if profile already exists.
-    const sqlCheck = 'SELECT * FROM USERSTATICDATA WHERE ACCOUNTID = ? AND PROFILE = ?'; 
+    const sqlCheck = 'SELECT PROFILEID FROM USERSTATICDATA WHERE ACCOUNTID = ? AND PROFILE = ?'; 
     
     //SQL CMD: Insert new profile.
     const sql = 'INSERT INTO USERSTATICDATA(ACCOUNTID, PROFILE, DOB, GENDER, HEIGHT, WEIGHT, BMI) VALUES (? , ? , ? , ? , ? , ? , ?)'; 
 
-    jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if(err) return res.status(401).send({ success: false });//Err: Unauthorized: Invalid access token.
+    //>> Execution >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    /**
+     * Steps:
+     * 1. Get access token from header.
+     * 2. Verify access token. Retrieve ACCOUNTID.
+     * 3. Calculate BMI.
+     * 4. Check if PROFILE already exists on this account.
+     * 5. Add new profile to database.
+     * 6. Retrieve PROFILEID of new profile.
+     * 7. Create new full token.
+     */
 
-        var BMI = (req.body.WEIGHT / ((req.body.HEIGHT) * (req.body.HEIGHT))); //Calculate BMI.
+    //1. Get access token from header.
+    const authHeader = req.headers['authorization']; // Express converts header names to lowercase
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        const accessToken = authHeader.split(' ')[1];
+        
+        //2. Verify access token.
+        jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+            if(err) return res.status(401).send({ success: false });//Err: Unauthorized: Invalid access token.
 
-        try{
-            DB.all(sqlCheck, [user.ACCOUNTID, req.body.PROFILE], (err, rows) => {
-                if(err) return res.status(500).send({ success: false });//Err: Server Err.
-                if(rows.length > 0) return res.status(409).send({ success: false });//Err: Conflict: Profile already exists.
-                
-                DB.run(sql, [user.ACCOUNTID, req.body.PROFILE, req.body.DOB, req.body.GENDER, req.body.HEIGHT, req.body.WEIGHT, BMI], (err) => {
-                if(err) return res.status(500).send({ success: false });//Err: Server Err.
-                return res.status(200).send({ success: true });//Success: Profile created.
+            //2. Retrieve ACCOUNTID.
+            const ACCOUNTID = user.ACCOUNTID;
+
+            //3. Calculate BMI.
+            const BMI = (WEIGHT / ((HEIGHT) * (HEIGHT))); //Calculate BMI.
+
+            try{
+                //4. Check if PROFILE already exists on this account.
+                DB.all(sqlCheck, [ACCOUNTID, PROFILE], (err, rows) => {
+                    if(err) return res.status(500).send({ success: false });//Err: Server Err.
+                    if(rows.length > 0) return res.status(409).send({ success: false });//Err: Conflict: Profile already exists.
+                    
+                    //5. Add new profile to database.
+                    DB.run(sql, [ACCOUNTID, PROFILE, DOB, GENDER, HEIGHT, WEIGHT, BMI], (err) => {
+                        if(err) return res.status(500).send({ success: false });//Err: Server Err.
+
+                        //6. Retrieve PROFILEID of new profile.
+                        DB.all(sqlCheck, [ACCOUNTID, PROFILE], (err, rows) => {
+                            if(err) return res.status(500).send({ success: false });//Err: Server Err.
+
+                            const PROFILEID = rows[0].PROFILEID;
+
+                            //7. Create new full token.
+                            const accessToken = generateAccessToken({ ACCOUNTID: ACCOUNTID, PROFILEID: PROFILEID });
+                            return res.status(200).send({ success: true , accessToken });//Success: Profile created.
+                        });
+                    });
                 });
-            });
-        } catch(err){res.status(500).send({ success: false })}//Err: Server Err.
-    });
+            } catch(err){res.status(500).send({ success: false })}//Err: Server Err.
+        });
+    } else return res.status(401).send({ success: false });//Err: Unauthorized: Access token not found.
 })
 
 app.post('/getProfiles', async (req, res) => {

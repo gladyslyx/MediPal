@@ -1,12 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import "./CSS/LoginRegister.css";
-import { setAccessToken } from"./clientSession.jsx";
+import "./CSS/Err.css";
+import { setAccessToken, displayErr } from"./clientSession.jsx";
 
 const API_REGISTER = 'http://localhost:3000/register';
 const API_LOGIN = 'http://localhost:3000/login';
-
-//Register Page handles account registration. 
-//It navigates the user to the first time registry page if registration is successful.
 
 //<<<<<<Register Page>>>>>>: Handles and displays register page.
 export default function Register() {
@@ -19,6 +17,9 @@ export default function Register() {
         {/*Message Division.*/}
         <h1>Create account</h1>
         <p className="subtitle">Begin your health journey today.</p>
+
+        {/*Error Message Display.*/}
+        <h3 id="err" className="err"></h3>
 
         {/*Call Form*/}
         <Form />
@@ -59,15 +60,6 @@ function Switcher() {
 
 //<<<<<<Form Handler>>>>>>
 function Form(){
-
-  /** [ Helper Function ] 
-   * Displays error message on the form.
-  */
-  const displayErr = (msg) =>{
-    var err = document.getElementById("err");
-    err.textContent = msg;
-    err.style.display = 'inline';
-  };
 
   /**[ Helper Function ]
    * Validates data entry.
@@ -165,9 +157,6 @@ return(
 <main>
   {/*Form Handler*/}
   <form onSubmit={handleSubmit}>
-
-    {/*Error Message Display.*/}
-    <div classname="form-group" id="err" className="err"></div>
 
     {/*Email Input*/}
     <div className="form-group">
