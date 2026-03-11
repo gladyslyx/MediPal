@@ -2,10 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { BrowserRouter,Routes,Route,Navigate } from 'react-router-dom';
 import Login from "./Login.jsx"
 import Register from './Register.jsx';
+import registerProfile from "./CreateProfileFirst.jsx";
 import Homepage from "./Homepage.jsx";
 import UserProfile from "./UserProfile.jsx";
 import ProfileSelection from "./ProfileSelection.jsx";
-import CreateProfile from "./CreateProfile.jsx";
 import MedHomepage from "./MedHomepage.jsx";
 import MedReqAccess from "./MedReqAccess.jsx";
 
@@ -22,8 +22,11 @@ function App() {
       {/*Src: Is Origin. Dest: Home, Register.*/}
       <Route path="/login" element={<Login/>}/>
 
-      {/*Src: Login. Dest: Login. */}
+      {/*Src: register. Dest: Login. */}
       <Route path='/register' element={<Register/>}/>
+
+      {/*Src: FirstTimeRegistry. Dest: Login. */}
+      <Route path='/firstProfile' element={<registerProfile/>}/>
 
       {/*Src: Login. Dest: User Profile */}
       <Route path='/home' element={<Homepage/>}/>
@@ -33,9 +36,7 @@ function App() {
 
       {/*Inaccessable*/}
       <Route path='/profile' element={<ProfileSelection/>}/>
-
-      {/*Inaccessable*/}
-      <Route path='/create' element={<CreateProfile/>}/>
+      
     </Routes>
     </BrowserRouter>
   )

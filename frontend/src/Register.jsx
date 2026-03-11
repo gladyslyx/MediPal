@@ -1,7 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import "./CSS/LoginRegister.css";
+import { setAccessToken } from"./clientSession.jsx";
 
-const API_REGISTER = 'http://localhost:3000/register ';
+const API_REGISTER = 'http://localhost:3000/register';
+const API_LOGIN = 'http://localhost:3000/login';
+
+//Register Page handles account registration. 
+//It navigates the user to the first time registry page if registration is successful.
 
 //<<<<<<Register Page>>>>>>: Handles and displays register page.
 export default function Register() {
@@ -94,7 +99,7 @@ function Form(){
   */
   const nav = useNavigate()
   const navigate = () =>{
-    nav('/home')
+    nav('/firstProfile')
   };
 
   /** [ Feature Function ] 
@@ -117,24 +122,41 @@ function Form(){
   */
   const sendDataToBackend = async (data) => {
     try{
+      /**
+       * Steps:
+       * 1. Register account with email and password.
+       * 2. Login to get half token for create profile request.
+       * 3. Navigate to first profile registry page with access token.
+       */
 
-        //Real Payload.
-        const response = await fetch(API_REGISTER, {
+        //1. Registering account.
+        const resReg = await fetch(API_REGISTER, {
         method: 'POST',
         headers:{'Content-Type': 'application/json',},
         body: JSON.stringify(data),
         });
-        const result = await response.json();
+        const resultReg = await resReg.json();
 
-        if (result.success) {
-        console.log("Status: ", response.status);
-        navigate();
+        //1. Check response.
+        if (resultReg.success) {
+
+          //2. Login to get access token for create profile request.
+          const resLog = await fetch(API_LOGIN, {
+            method: 'POST',
+            headers:{'Content-Type': 'application/json',},
+            body: JSON.stringify(data),
+          });
+          const resultLog = await resLog.json();
+
+          //3. Navigate to first profile registry page with access token.
+          setAccessToken(resultLog.accessToken);
+          navigate();
         }
-        else if (!result.success && response.status == 409) 
+        //Failure
+        else if (!resultReg.success && resReg.status == 409)
           displayErr("Email already exists!"); //Conflict: Email already exists.
         else displayErr("Error: Registration failed!");
-
-      } 
+      }
       catch(err){"Error: Register: Register: ", err.message}
   };
 
@@ -145,7 +167,7 @@ return(
   <form onSubmit={handleSubmit}>
 
     {/*Error Message Display.*/}
-    <span id="err" className="err"></span>
+    <div classname="form-group" id="err" className="err"></div>
 
     {/*Email Input*/}
     <div className="form-group">

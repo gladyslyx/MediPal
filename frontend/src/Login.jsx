@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import "./CSS/LoginRegister.css";
+import { setAccessToken } from"./clientSession.jsx";
 
-const API_LOGIN = 'http://localhost:3000/login ';
+const API_LOGIN = 'http://localhost:3000/login';
+const API_GET_PROFILES = 'http://localhost:4000/getProfiles';
 
 //<<<<<<Login Page>>>>>>: Handles and displays login page.
 export default function Login(){
@@ -15,6 +17,9 @@ export default function Login(){
         <h1>Welcome Back</h1>
         <p className="subtitle">Log in to continue your health journey</p>
 
+        {/*Error Message Display.*/}
+        <h3 id="err" className="err"></h3>
+
         {/*Call Form*/}
         <Form />
 
@@ -24,6 +29,15 @@ export default function Login(){
     </div> 
   );
 }
+
+/** [ Feature Function ] 
+ * Displays error message on the form.
+*/
+function displayErr(msg) {
+  var err = document.getElementById("err")
+  err.textContent = msg;
+  err.style.display = 'block';
+};
 
 //<<<<<<Switcher Handler>>>>>>
 function Switcher() {
@@ -59,17 +73,8 @@ function Switcher() {
 function Form() {
   
   const nav = useNavigate()
-  const navigate = () =>{
-    nav('/home')
-  };
-
-  /** [ Feature Function ] 
-   * Displays error message on the form.
-  */
-  const displayErr = (msg) =>{
-    var err = document.getElementById("err")
-    err.textContent = msg;
-    err.style.display = 'inline';
+  const navigate = (dest) =>{
+    nav(dest)
   };
 
   /** [ Feature Function ] 
@@ -90,7 +95,15 @@ function Form() {
   */
   const sendDataToBackend = async (data) => {
     try{
-      //Payload.
+      /**
+       * Steps:
+       * 1. Send login request with email and password.
+       * 2. Set access token.
+       * 3a. isHalf: true, navigate to create profile page with half token.
+       * 3b. isHalf: false, navigate to home page with full token.
+       */
+
+      //1. Payload.
       const response = await fetch(API_LOGIN, {
         method: 'POST',
         headers:{'Content-Type': 'application/json',},
@@ -98,10 +111,20 @@ function Form() {
       });
       const result = await response.json();
 
-      //Check response.
       if (result.success) {
-        console.log('Status: ',result.status);
-        navigate();
+
+        //2. Set access token.
+        setAccessToken(result.accessToken);
+
+        if(result.isHalf) {
+          //3a. isHalf: true, navigate to create profile page with half token.
+          navigate('/firstProfile');
+        }
+        else {
+          //3b. isHalf: false, navigate to home page with full token.
+          navigate('/home');
+        }
+
       }
       else if (!result.success && response.status == 401) { 
         console.log('Status: ',result.status);
@@ -119,7 +142,7 @@ function Form() {
       <form name="form" onSubmit={handleSubmit}>     
 
         {/*Error Message Display.*/}
-        <span id="err" className="err"></span>
+        <div id="err" className="err"></div>
 
         {/*Email Input*/}
         <div className="form-group">

@@ -28,8 +28,35 @@ app.get('/', (req, res) =>{
     res.status(200).send('OK. Resource server is running...');
 })
 
+//>>FUNCTIONS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+
+  // The header value is "Bearer TOKEN".
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (token == null) {
+    return res.sendStatus(401); // No token
+  }
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if(err) return res.sendStatus(403); // Invalid token
+    req.user = user; // Attach user info to request object
+    next(); // Proceed to the next middleware or route handler
+    });
+    
+}
+
 //>>API ENDPOINTS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+/** /createProfile
+ * Creates a new profile for the user.
+ * Requires: accessToken, PROFILE, DOB, GENDER, HEIGHT, WEIGHT.
+ * Success: Inserts profile data into database.
+ * Success: Returns success: true and a status code (200).
+ * Failure: Returns success: false and a status code (400-500).
+ */
 app.post('/createProfile', async (req, res) => {
 
     const accessToken = req.body.accessToken;
@@ -56,6 +83,28 @@ app.post('/createProfile', async (req, res) => {
                 });
             });
         } catch(err){res.status(500).send({ success: false })}//Err: Server Err.
-    })
+    });
+})
 
+app.post('/getProfiles', async (req, res) => {
+
+    const accessToken = req.body.accessToken;
+
+    //SQL CMD: Check if account has any profiles.
+    const sql = 'SELECT * FROM USERSTATICDATA WHERE ACCOUNTID = ?';
+    
+    jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if(err) return res.status(401).send({ success: false });//Err: Unauthorized: Invalid access token.
+
+        try{
+            //SQL to DB: Check if email exists.
+            DB.all(sql, [user.ACCOUNTID], async (err, rows)=>{
+                if(err) return res.status(400).send({ success: false }); //Err: Bad Req.
+                if(rows.length == 0) return res.status(404).send({ success: false }); //Err: Not Found: no profiles found for account.
+                
+                return res.status(200).send({ success: true, profiles: rows }); //Success: Profiles found.
+            })
+        }
+        catch(err){res.status(500).send({ success: false })}//Err: Server Err.
+    })
 })

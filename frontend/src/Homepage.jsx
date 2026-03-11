@@ -18,7 +18,7 @@ export default function Homepage() {
     );
 }
 
-function Card({title, description,variant, icon, callback}){
+function Card({title, description, variant, icon, callback}){
     return (
         <div className= {`Card ${variant === "primary" ? "card-primary" : "card-secondary"}`}>
             <div className="card-icon">

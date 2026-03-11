@@ -1,6 +1,10 @@
 .homepage {
     background-color: #F1E6D8;
     width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }   
 
 .content {
@@ -93,6 +97,8 @@
 }
 
 .open {
+    text-align: center;
+    display: block;
     bottom: 20px;
     right: 25px;
     font-weight: bold;

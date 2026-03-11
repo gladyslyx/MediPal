@@ -30,69 +30,59 @@ app.get('/', (req, res) =>{
 
 //>>FUNCTIONS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-/** Generates an access token for the user 
- * Expiry time: 10 minutes.
- * Should be stored in memory on the client side.
+/** Generates an access token for the user.
+ * Full Payload: ACCOUNTID, PROFILEID.
+ * Half Payload: ACCOUNTID.
 */
 function generateAccessToken(user) {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10m' })
-}
-
-/** Generates a refresh token for the user 
- * No expiry time.
- * Should be stored in an httpOnly cookie on the client side, and also stored in the database for verification.
-*/
-function generateRefreshToken(user) {
-  return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
 }
 
 //>>API ENDPOINTS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 /** /register
  * Registers email and password to the database.
+ * Requires: EMAIL, PASSWORD.
  * Success: Inserts email, hashed password and refresh token to database.
- * Success: Returns access token, refresh token, success: true and status code (200).
+ * Success: Returns status code (200).
  * Failure: Returns success: false and a status code (400-500).
  */
 app.post('/register', async (req, res) => {
     res.set('content-type', 'application/json');
 
+    //>> Set up >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    const EMAIL = req.body.EMAIL;
+    const PASSWORD = req.body.PASSWORD;
+
     //SQL CMD: check if email already exists in database.
-    const sqlCheck = 'SELECT ACCOUNTID FROM USERLOGINTABLE WHERE EMAIL=?'; 
+    const sqlCheck = 'SELECT * FROM USERLOGINTABLE WHERE EMAIL=?'; 
 
     //SQL CMD: Insert new email and password.
     const sqlInsert = 'INSERT INTO USERLOGINTABLE(EMAIL, PASSWORD) VALUES (? , ?)'; 
 
+    //>> Execution >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    /**
+     * Steps:
+     * 1. Check if email already exists in database. If it does, return error.
+     * 2. Hash password and insert email and hashed password into database.
+     * 3. Return success message.
+     */
+
     try{
-        //SQL to DB: Check if email already exists.
-        DB.all(sqlCheck, [req.body.EMAIL], async (err, rows)=>{
+        //1. Check if email already exists.
+        DB.all(sqlCheck, [EMAIL], async (err, rows)=>{
             if(err) return res.status(400).send({ success: false });//Err: Bad Req.
             if (rows.length > 0) return res.status(409).send({ success: false });//Err: Conflict: Email already exists.
             
-            //Hash password. Salt rounds: 10.
-            const hashedPassword = await bcrypt.hash(req.body.PASSWORD, 10)
+            //2. Hash password. Salt rounds: 10.
+            const hashedPassword = await bcrypt.hash(PASSWORD, 10)
 
-            //Insertion.
-            DB.run(sqlInsert, [req.body.EMAIL, hashedPassword], function(err){
+            //2. Insertion.
+            DB.run(sqlInsert, [EMAIL, hashedPassword], function(err){
                 if(err) return res.status(500).send({ success: false });//Err: Server Err.
-            
-                //Get ID.
-                DB.all(sqlCheck, [req.body.EMAIL], async (err, rows)=>{
-                    if(err) return res.status(500).send({ success: false });//Err: Server Err.
-                    
-                    //Create access token and refresh token.
-                    const accessToken = generateAccessToken({ ACCOUNTID: rows[0].ACCOUNTID });
-                    const REFRESHTOKEN = generateRefreshToken({ ACCOUNTID: rows[0].ACCOUNTID });
-
-                    //SQL CMD: Update refresh token for user.
-                    const sqlRefreshToken = 'UPDATE USERLOGINTABLE SET REFRESHTOKEN=? WHERE ACCOUNTID=?';
-
-                    // Update the refresh token in the database
-                    DB.run(sqlRefreshToken, [REFRESHTOKEN, rows[0].ACCOUNTID], (err) => {
-                        if (err) return res.status(500).send({ success: false });//Err: Server Err.
-                        return res.status(200).send({ success: true, accessToken, REFRESHTOKEN });//Success: Authorized.
-                    });  
-                })
+                
+                //3. Success.
+                return res.status(200).send({ success: true });//Success: Registered. 
             })
         })        
     }
@@ -101,35 +91,61 @@ app.post('/register', async (req, res) => {
 
 /** /login
  * Checks if email exists, and if password matches the email.
- * Success: Returns access token, refresh token, success: true and status code (200).
+ * Requires: EMAIL, PASSWORD.
+ * Success: Returns account ID and status code (200).
  * Failure: Returns success: false and a status code (400-500).
  */
 app.post('/login', (req, res) => {
     res.set('content-type', 'application/json');
 
+    //>> Set up >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    const EMAIL = req.body.EMAIL;
+    const PASSWORD = req.body.PASSWORD;
+
     //SQL CMD: Find user based on EMAIL.
     const sql = 'SELECT ACCOUNTID, PASSWORD FROM USERLOGINTABLE WHERE EMAIL=?'; 
 
+    //SQL CMD: Find profiles.
+    const sqlProfile = 'SELECT PROFILEID FROM USERSTATICDATA WHERE ACCOUNTID=?'; 
+
+    //>> Execution >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    /**
+     * Steps:
+     * 1. Check if email exists in database. If it doesn't, return error.
+     * 2. Compare hashed password with password from request.
+     * 3. Get account ID.
+     * 4a. Find first profile for account, and return full token.
+     * 4b. If no profiles found, return half token with account ID only.
+     */
+
     try{
-        //SQL to DB: Check if email exists.
-        DB.all(sql, [req.body.EMAIL], async (err, rows)=>{
+        //1. SQL to DB: Check if email exists.
+        DB.all(sql, [EMAIL], async (err, rows)=>{
             if(err) return res.status(400).send({ success: false }); //Err: Bad Req.
 
-            //If email exists, compare password.
-            if (rows.length > 0 && await bcrypt.compare(req.body.PASSWORD, rows[0].PASSWORD))
+            //2. If email exists, compare password.
+            if (rows.length > 0 && await bcrypt.compare(PASSWORD, rows[0].PASSWORD))
             {
-                //Create access token and refresh token.
-                const accessToken = generateAccessToken({ ACCOUNTID: rows[0].ACCOUNTID });
-                const REFRESHTOKEN = generateRefreshToken({ ACCOUNTID: rows[0].ACCOUNTID });
+                //3. Get account ID.
+                const ACCOUNTID = rows[0].ACCOUNTID;
 
-                //SQL CMD: Update refresh token for user.
-                const sqlRefreshToken = 'UPDATE USERLOGINTABLE SET REFRESHTOKEN=? WHERE ACCOUNTID=?';
-
-                // Update the refresh token in the database
-                DB.run(sqlRefreshToken, [REFRESHTOKEN, rows[0].ACCOUNTID], (err) => {
-                    if (err) return res.status(500).send({ success: false });//Err: Server Err.
-                    return res.status(200).send({ success: true, accessToken, REFRESHTOKEN });//Success: Authorized.
-                });
+                //4a. SQL to DB: Find first profile for account.
+                DB.all(sqlProfile, [ACCOUNTID], (err, rows)=>{
+                    if(err) return res.status(400).send({ success: false }); //Err: Bad Req.
+                    
+                    if(rows.length > 0){
+                        //4a. Profile found. Return full token with account ID and profile ID.
+                        const PROFILEID = rows[0].PROFILEID;
+                        const accessToken = generateAccessToken({ ACCOUNTID: ACCOUNTID, PROFILEID: PROFILEID });
+                        return res.status(200).send({ success: true, accessToken , isHalf: false});//Success: Authorized.
+                    }
+                    else{
+                        //4b. No profile found. Return half token with account ID only.
+                        const accessToken = generateAccessToken({ ACCOUNTID: ACCOUNTID });
+                        return res.status(200).send({ success: true, accessToken , isHalf: true });//Success: Authorized.
+                    }
+                })
             }
             else return res.status(401).send({ success: false });//Err: Unauthorized: Wrong email or password.
         })
@@ -137,9 +153,36 @@ app.post('/login', (req, res) => {
     catch(err){res.status(500).send({ success: false })}//Err: Server Err.
 })
 
+/** /generateTokens
+ * Generates new access and refresh tokens for a user.
+ * Requires: ACCOUNTID, PROFILEID.
+ * Success: Returns tokens and success: true.
+ * Failure: Returns success: false and a status code (400-500).
+ */
+app.post('/generateTokens', async (req, res) => {
+
+    //Create access token and refresh token.
+    const accessToken = generateAccessToken({ ACCOUNTID: req.body.ACCOUNTID, PROFILEID: req.body.PROFILEID });
+    const REFRESHTOKEN = generateRefreshToken({ ACCOUNTID: req.body.ACCOUNTID, PROFILEID: req.body.PROFILEID });
+
+    //SQL CMD: Update refresh token for user.
+    const sqlRefreshToken = 'UPDATE USERLOGINTABLE SET REFRESHTOKEN=? WHERE ACCOUNTID=?';
+
+    try{
+    // Update the refresh token in the database
+    DB.run(sqlRefreshToken, [REFRESHTOKEN, req.body.ACCOUNTID], (err) => {
+        if (err) return res.status(500).send({ success: false });//Err: Server Err.
+        return res.status(200).send({ success: true, accessToken, REFRESHTOKEN });//Success: Authorized.
+        })
+    }
+    catch(err){res.status(500).send({ success: false })}//Err: Server Err.
+});
+
+
 /** /refresh
  * Verifies refresh token, and if valid, generates new access token.
  * Should be called when access token expires, and client has a valid refresh token.
+ * Requires: REFRESHTOKEN.
  * Success: Returns access token, success: true and status code (200).
  * Failure: Returns success: false and a status code (400-500).
  */
