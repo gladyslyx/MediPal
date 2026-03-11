@@ -106,17 +106,12 @@ TABLE: USERSTATICDATA
         * DESC: Profile identifier under an account.
     3. DOB : TEXT
         * DESC: Profile date of birth. ISO-8601 standard, YYYY-MM-DD.
-    4. AGE: INT
-        * CALCULATION: 
-            * If (current DD:MM >= DOB DD:MM) then (Current year - DOB year).
-            * else (current year - DOB year - 1).
-        * DESC: Profile age. 
-    5. GENDER : TEXT 
-    6. HEIGHT : NUMERIC
+    4. GENDER : TEXT 
+    5. HEIGHT : NUMERIC
         * UNIT: Metres, m.
-    7. WEIGHT : NUMERIC 
+    6. WEIGHT : NUMERIC 
         * UNIT: Kilograms, kg.
-    8. BMI : NUMERIC
+    7. BMI : NUMERIC
         * CALCULATION: (weight / height^2). 
         * DESC: Profile BMI for given weight and height.
 

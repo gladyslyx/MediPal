@@ -1,3 +1,4 @@
+//Register new user account.
 POST http://localhost:3000/register
 Content-Type: application/json
 
@@ -8,6 +9,7 @@ Content-Type: application/json
 
 ###
 
+//Generate new refresh and access token.
 POST http://localhost:3000/login
 Content-Type: application/json
 
@@ -18,7 +20,18 @@ Content-Type: application/json
 
 ###
 
+//Generate new access token.
 POST http://localhost:3000/refresh
+Content-Type: application/json
+
+{
+    "REFRESHTOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBQ0NPVU5USUQiOjIwLCJpYXQiOjE3NzMxOTMwODJ9.XvsLKMcTcPjDdfCyppfT1AujjUS29ULz24DXXkj88wY"
+}
+
+###
+
+//Invalidate refresh token.
+POST http://localhost:3000/logout
 Content-Type: application/json
 
 {
@@ -27,9 +40,17 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3000/logout
+//Create new user profile.
+POST http://localhost:4000/createProfile
 Content-Type: application/json
 
 {
-    "REFRESHTOKEN": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFTUFJTCI6Im15RW1haWxAZXhhbXBsZS5jb20iLCJpYXQiOjE3NzI4NTY3NTZ9.hWSAVjQMiBAZPixgbmp0eRoWWwoFEY7sr5gVjYY8BvY"
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBQ0NPVU5USUQiOjIwLCJpYXQiOjE3NzMxOTMwOTQsImV4cCI6MTc3MzE5MzY5NH0.FSYnzBXXoFDZBl2xWQFzDSOv6VPPGOE9c7C3Fvib4l4",
+    "PROFILE": "John Boeing",
+    "DOB": "1990-01-01",
+    "GENDER": "Male",
+    "HEIGHT": 1.75,
+    "WEIGHT": 70
 }
+
+###

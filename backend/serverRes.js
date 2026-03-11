@@ -34,18 +34,26 @@ app.post('/createProfile', async (req, res) => {
 
     const accessToken = req.body.accessToken;
 
+    //SQL CMD: Check if profile already exists.
+    const sqlCheck = 'SELECT * FROM USERSTATICDATA WHERE ACCOUNTID = ? AND PROFILE = ?'; 
+    
     //SQL CMD: Insert new profile.
-    const sql = 'INSERT INTO USERSTATICDATA(ID, PROFILE, DOB, AGE, GENDER, HEIGHT, WEIGHT, BMI) VALUES (? , ? , ? , ? , ? , ? , ? , ?)'; 
+    const sql = 'INSERT INTO USERSTATICDATA(ACCOUNTID, PROFILE, DOB, GENDER, HEIGHT, WEIGHT, BMI) VALUES (? , ? , ? , ? , ? , ? , ?)'; 
 
     jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if(err) return res.status(401).send({ success: false });//Err: Unauthorized: Invalid access token.
 
-        
+        var BMI = (req.body.WEIGHT / ((req.body.HEIGHT) * (req.body.HEIGHT))); //Calculate BMI.
 
         try{
-            DB.run(sql, [user.ID, req.body.DOB, null, null, null, null, null, null], (err) => {
+            DB.all(sqlCheck, [user.ACCOUNTID, req.body.PROFILE], (err, rows) => {
+                if(err) return res.status(500).send({ success: false });//Err: Server Err.
+                if(rows.length > 0) return res.status(409).send({ success: false });//Err: Conflict: Profile already exists.
+                
+                DB.run(sql, [user.ACCOUNTID, req.body.PROFILE, req.body.DOB, req.body.GENDER, req.body.HEIGHT, req.body.WEIGHT, BMI], (err) => {
                 if(err) return res.status(500).send({ success: false });//Err: Server Err.
                 return res.status(200).send({ success: true });//Success: Profile created.
+                });
             });
         } catch(err){res.status(500).send({ success: false })}//Err: Server Err.
     })

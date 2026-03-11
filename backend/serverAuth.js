@@ -58,7 +58,7 @@ app.post('/register', async (req, res) => {
     res.set('content-type', 'application/json');
 
     //SQL CMD: check if email already exists in database.
-    const sqlCheck = 'SELECT ID FROM USERLOGINTABLE WHERE EMAIL=?'; 
+    const sqlCheck = 'SELECT ACCOUNTID FROM USERLOGINTABLE WHERE EMAIL=?'; 
 
     //SQL CMD: Insert new email and password.
     const sqlInsert = 'INSERT INTO USERLOGINTABLE(EMAIL, PASSWORD) VALUES (? , ?)'; 
@@ -81,14 +81,14 @@ app.post('/register', async (req, res) => {
                     if(err) return res.status(500).send({ success: false });//Err: Server Err.
                     
                     //Create access token and refresh token.
-                    const accessToken = generateAccessToken({ ID: rows[0].ID });
-                    const REFRESHTOKEN = generateRefreshToken({ ID: rows[0].ID });
+                    const accessToken = generateAccessToken({ ACCOUNTID: rows[0].ACCOUNTID });
+                    const REFRESHTOKEN = generateRefreshToken({ ACCOUNTID: rows[0].ACCOUNTID });
 
                     //SQL CMD: Update refresh token for user.
-                    const sqlRefreshToken = 'UPDATE USERLOGINTABLE SET REFRESHTOKEN=? WHERE ID=?';
+                    const sqlRefreshToken = 'UPDATE USERLOGINTABLE SET REFRESHTOKEN=? WHERE ACCOUNTID=?';
 
                     // Update the refresh token in the database
-                    DB.run(sqlRefreshToken, [REFRESHTOKEN, rows[0].ID], (err) => {
+                    DB.run(sqlRefreshToken, [REFRESHTOKEN, rows[0].ACCOUNTID], (err) => {
                         if (err) return res.status(500).send({ success: false });//Err: Server Err.
                         return res.status(200).send({ success: true, accessToken, REFRESHTOKEN });//Success: Authorized.
                     });  
@@ -108,7 +108,7 @@ app.post('/login', (req, res) => {
     res.set('content-type', 'application/json');
 
     //SQL CMD: Find user based on EMAIL.
-    const sql = 'SELECT ID, PASSWORD FROM USERLOGINTABLE WHERE EMAIL=?'; 
+    const sql = 'SELECT ACCOUNTID, PASSWORD FROM USERLOGINTABLE WHERE EMAIL=?'; 
 
     try{
         //SQL to DB: Check if email exists.
@@ -119,14 +119,14 @@ app.post('/login', (req, res) => {
             if (rows.length > 0 && await bcrypt.compare(req.body.PASSWORD, rows[0].PASSWORD))
             {
                 //Create access token and refresh token.
-                const accessToken = generateAccessToken({ ID: rows[0].ID });
-                const REFRESHTOKEN = generateRefreshToken({ ID: rows[0].ID });
+                const accessToken = generateAccessToken({ ACCOUNTID: rows[0].ACCOUNTID });
+                const REFRESHTOKEN = generateRefreshToken({ ACCOUNTID: rows[0].ACCOUNTID });
 
                 //SQL CMD: Update refresh token for user.
-                const sqlRefreshToken = 'UPDATE USERLOGINTABLE SET REFRESHTOKEN=? WHERE ID=?';
+                const sqlRefreshToken = 'UPDATE USERLOGINTABLE SET REFRESHTOKEN=? WHERE ACCOUNTID=?';
 
                 // Update the refresh token in the database
-                DB.run(sqlRefreshToken, [REFRESHTOKEN, rows[0].ID], (err) => {
+                DB.run(sqlRefreshToken, [REFRESHTOKEN, rows[0].ACCOUNTID], (err) => {
                     if (err) return res.status(500).send({ success: false });//Err: Server Err.
                     return res.status(200).send({ success: true, accessToken, REFRESHTOKEN });//Success: Authorized.
                 });
@@ -165,7 +165,7 @@ app.post('/refresh', (req, res) => {
                     if (err) return res.status(403).send({ success: false });//Err: Forbidden: Invalid token.
                     
                     //Generate new access token.
-                    const accessToken = generateAccessToken({ EMAIL: user.EMAIL });
+                    const accessToken = generateAccessToken({ ACCOUNTID: user.ACCOUNTID });
                     return res.status(200).send({ success: true, accessToken });//Success: Authorized. 
                 })
             else return res.status(403).send({ success: false });//Err: Forbidden: Token not found in database.
