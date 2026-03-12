@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "./CSS/Homepage.css";
 import { getAccessToken, verifyAccessToken } from "./clientSession"
+import NavBar from "./NavBar.jsx";
 
 const PROFILE_PAGE = '/user';
 const PROFILE_SELECTION_PAGE = '/profile';
@@ -10,7 +11,7 @@ export default function Homepage() {
     return (
         <div className="homepage">
             
-            {/* <Navbar /> */}
+            <NavBar /> 
             <div className="content">
                 <h1>Welcome back, Olivia</h1>
                 <p>Here's your health overview for today.</p>

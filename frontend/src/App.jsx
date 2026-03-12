@@ -21,7 +21,7 @@ function App() {
 
       {/* Login Page
           Index --> /login --> /home (if profile found)
-                       |-----> /firstProfile (if no profiles found)
+                      |------> /firstProfile (if no profiles found)
       */}
       <Route path="/login" element={<Login/>}/>
 

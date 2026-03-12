@@ -1,0 +1,94 @@
+.navbar{
+    width:95%;
+    height:100px;
+
+    background-color:#2F3A59;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 40px;
+
+    color:white;
+
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+/* LEFT SECTION */
+
+.navbar-left{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.logo-box{
+    width:60px;
+    height:60px;
+
+    background:white;
+
+    border-radius:12px;
+    display: flex;
+    margin-left: 15px;
+}
+
+/* BRAND TEXT */
+
+.brand-title{
+    font-size:36px;
+    margin:0;
+    color: white;
+    font-family:serif;
+    display: flex;
+}
+
+.brand-subtitle{
+    font-size:16px;
+    margin:0;
+    opacity:0.85;
+}
+
+/* RIGHT SECTION */
+
+.navbar-right{
+    display:flex;
+    align-items:center;
+    gap:30px;
+}
+
+.user-info{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.profile-pic{
+    width:40px;
+    height:40px;
+    background-color:#FFFFFF;
+    border-radius:50%;
+}
+
+.username{
+    font-size:20px;
+}
+
+/* ICONS */
+
+.nav-icons{
+    display:flex;
+    gap:22px;
+    cursor:pointer;
+}
+
+.nav-icons svg{
+    transition:0.2s;
+}
+
+.nav-icons svg:hover{
+    transform:scale(1.1);
+}
