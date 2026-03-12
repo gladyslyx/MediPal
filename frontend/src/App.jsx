@@ -19,22 +19,29 @@ function App() {
       {/* Index Path */}
       <Route index element={<Navigate to="/login" replace/>}/>
 
-      {/*Src: Is Origin. Dest: Home, Register.*/}
+      {/* Login Page
+          Index --> /login --> /home (if profile found)
+                       |-----> /firstProfile (if no profiles found)
+      */}
       <Route path="/login" element={<Login/>}/>
 
-      {/*Src: register. Dest: Login. */}
+      {/* Register Page
+          /register --> /firstProfile
+      */}
       <Route path='/register' element={<Register/>}/>
 
-      {/*Src: FirstTimeRegistry. Dest: Login. */}
+      {/* First Profile Creation Page
+          /login ------> /firstProfile --> /home
+          /register ----------| 
+      */}
       <Route path='/firstProfile' element={<RegisterProfile/>}/>
 
-      {/*Src: Login. Dest: User Profile */}
+      {/* Home Page
+          /home --> /user
+            |-----> /profile
+      */}
       <Route path='/home' element={<Homepage/>}/>
-
-      {/*Inaccessable*/}
       <Route path='/user' element={<UserProfile/>}/>
-
-      {/*Inaccessable*/}
       <Route path='/profile' element={<ProfileSelection/>}/>
       
     </Routes>

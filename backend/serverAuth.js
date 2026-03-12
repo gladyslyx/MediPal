@@ -2,9 +2,8 @@ import { DB } from "./DBConnect.js";
 import express from 'express';
 import bodyParser from 'body-parser'
 import cors from 'cors';
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import 'dotenv/config'; 
+import { generateAccessToken, verifyAccessToken } from "./funcPack.js";
 
 const app = express();
 app.use(bodyParser.json()); //Allows JSON read.
@@ -27,16 +26,6 @@ app.listen(portCode, (err) => {
 app.get('/', (req, res) =>{
     res.status(200).send('OK. Auth server is running...');
 })
-
-//>>FUNCTIONS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-/** Generates an access token for the user.
- * Full Payload: ACCOUNTID, PROFILEID.
- * Half Payload: ACCOUNTID.
-*/
-export function generateAccessToken(user) {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
-}
 
 //>>API ENDPOINTS>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -156,7 +145,7 @@ app.post('/login', (req, res) => {
 
 /** /verifyToken
  * Verifies the authenticity of the access token.
- * Requires: accessToken.
+ * Requires: accessToken. Expected in body, not header.
  * Success: Returns success: true and a status code (200).
  * Failure: Returns success: false and a status code (401-500).
  */
@@ -164,10 +153,12 @@ app.post('/verifyToken', (req, res) => {
     res.set('content-type', 'application/json');
     const accessToken = req.body.accessToken;
 
-    jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err) => {
-        if(err) return res.status(401).send({ success: false });//Err: Unauthorized: Invalid access token.
-        return res.status(200).send({ success: true });//Success: Authorized.
-    });
+    const verificationResult = verifyAccessToken(accessToken);
+
+    if(verificationResult.success) {
+        return res.status(200).send({ success: true });//Success: Token is valid.
+    }
+    else return res.status(401).send({ success: false });
 })
 
 {/*

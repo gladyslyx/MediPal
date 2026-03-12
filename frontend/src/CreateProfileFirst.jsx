@@ -2,47 +2,32 @@ import "./CSS/CreateProfile.css";
 import "./CSS/Err.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { setAccessToken, getAccessToken, displayErr } from "./clientSession.jsx";
+import { setAccessToken, getAccessToken, displayErr, verifyAccessToken } from "./clientSession.jsx";
 
 const accessToken = getAccessToken();
 
-const API_VERIFY_TOKEN = 'http://localhost:3000/verifyToken';
-const API_LOGIN = 'http://localhost:3000/login';
+const HOME_PAGE = '/home';
+const LOGIN_PAGE = '/login';
+
 const API_CREATE_PROFILE = 'http://localhost:4000/createProfile';
 
 export default function RegisterProfile() {
 
-    /** [ Helper Function ]
-     * Verifies access token validity.
-     * Redirects to login page if token is invalid or not found.
-     */
-    const verifyAccessToken = async () => {
+    const nav = useNavigate()
+    const navigateToHome = () =>{
+    nav(HOME_PAGE)
+    };
 
-        if(!accessToken){
-            nav('/login');
-        }
-        else{
-            try{
-                //Payload.
-                const res = await fetch(API_VERIFY_TOKEN, {
-                method: 'POST',
-                headers:{'Content-Type': 'application/json'},
-                body: JSON.stringify({ accessToken }),
-                });
-                const result = await res.json();
+    const navigateToLogin = () =>{
+    nav(LOGIN_PAGE)
+    };
 
-                if (!result.success) {
-                    nav('/login');
-                }
-            }
-            catch(err){"Error: CreateProfileFirst: verifyAccessToken: ", err.message}
+    //Handles missing token.
+    const verifyToken = async () => {
+        if(!verifyAccessToken){
+            navigateToLogin();
         }
     }
-
-    const nav = useNavigate()
-    const navigate = () =>{
-    nav('/home')
-    };
 
     /** [ Feature Function ] 
     * Called when submitting form data.
@@ -79,7 +64,7 @@ export default function RegisterProfile() {
 
             if(result.success){
                 setAccessToken(result.accessToken);//2. Get full token.
-                navigate();//3. Navigate to home page.
+                navigateToHome();//3. Navigate to home page.
             }
             else displayErr('Error: Create profile failed!');
         }
@@ -87,7 +72,7 @@ export default function RegisterProfile() {
     };
 
     return (
-        window.onload = verifyAccessToken(),
+        window.onload = verifyToken(),
 
         <div className="create-profile-page">
             <div className="create-profile-card">

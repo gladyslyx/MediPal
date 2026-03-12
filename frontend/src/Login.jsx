@@ -3,8 +3,11 @@ import "./CSS/LoginRegister.css";
 import "./CSS/Err.css";
 import { setAccessToken, displayErr } from"./clientSession.jsx";
 
+const REGISTER_PAGE = '/register';
+const CREATE_PROFILE_PAGE = '/firstProfile';
+const HOME_PAGE = '/home';
+
 const API_LOGIN = 'http://localhost:3000/login';
-const API_GET_PROFILES = 'http://localhost:4000/getProfiles';
 
 //<<<<<<Login Page>>>>>>: Handles and displays login page.
 export default function Login(){
@@ -33,10 +36,10 @@ export default function Login(){
 
 //<<<<<<Switcher Handler>>>>>>
 function Switcher() {
-  
+
   const nav = useNavigate()
-  const navigate = () =>{
-    nav('/register')
+  const navigateToRegister = () =>{
+    nav(REGISTER_PAGE)
   };
 
   return (
@@ -52,7 +55,7 @@ function Switcher() {
         {/*Register Switcher*/}
         <button
           className="tab"
-          onClick={navigate}
+          onClick={navigateToRegister}
         >
           Register
         </button>
@@ -63,11 +66,14 @@ function Switcher() {
 
 //<<<<<<Form Handler>>>>>>
 function Form() {
-  
-  const nav = useNavigate()
-  const navigate = (dest) =>{
-    nav(dest)
+
+  const nav = useNavigate();
+  const navigateToCreateProfile = () => {
+      nav(CREATE_PROFILE_PAGE);
   };
+  const navigateToHome = () => {
+      nav(HOME_PAGE);
+  }
 
   /** [ Feature Function ] 
    * Called when submitting form data.
@@ -110,11 +116,11 @@ function Form() {
 
         if(result.isHalf) {
           //3a. isHalf: true, navigate to create profile page with half token.
-          navigate('/firstProfile');
+          navigateToCreateProfile();
         }
         else {
           //3b. isHalf: false, navigate to home page with full token.
-          navigate('/home');
+          navigateToHome();
         }
 
       }

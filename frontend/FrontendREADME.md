@@ -1,3 +1,13 @@
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<TO_DO>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+Homepage 
+> Biomarker Page
+> Connected Device
+> Goals
+> Bookings
+> Alerts
+> Approvals
+> Chatbot
+
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<WARNING>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 Do NOT touch package.json.
 Do NOT touch package-lock.json.

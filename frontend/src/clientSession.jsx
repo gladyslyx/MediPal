@@ -1,3 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
+//Stores commonly used functions.
+
 export function setAccessToken(token) {
     localStorage.setItem('accessToken', token);
 }
@@ -21,9 +25,34 @@ export function displayErr(msg) {
   err.style.display = 'block';
 };
 
-/** [ Helper Function ] 
- * Checks if a value is a number.
-*/
-export function isNumber(n){
-    return typeof(n) != "boolean" && !isNaN(n);
+/** [ Helper Function ]
+ * Verifies access token validity.
+ * Redirects to login page if token is invalid or not found.
+ */
+export async function verifyAccessToken() {
+
+    const accessToken = getAccessToken();
+
+    const API_VERIFY_TOKEN = 'http://localhost:3000/verifyToken';
+
+    if(!accessToken){
+        return false;
+    }
+    else{
+        try{
+            //Payload.
+            const res = await fetch(API_VERIFY_TOKEN, {
+            method: 'POST',
+            headers:{'Content-Type': 'application/json'},
+            body: JSON.stringify({ accessToken }),
+            });
+            const result = await res.json();
+
+            if (!result.success) {
+                return false;
+            }
+            else return true;
+        }
+        catch(err){"Error: CreateProfileFirst: verifyAccessToken: ", err.message}
+    }
 }

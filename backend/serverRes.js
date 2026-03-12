@@ -4,7 +4,7 @@ import bodyParser from 'body-parser'
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config'; 
-import { generateAccessToken } from "./serverAuth.js";
+import { generateAccessToken, verifyAccessToken } from "./funcPack.js";
 
 const app = express();
 app.use(bodyParser.json()); //Allows JSON read.
@@ -71,62 +71,62 @@ app.post('/createProfile', async (req, res) => {
         const accessToken = authHeader.split(' ')[1];
         
         //2. Verify access token.
-        jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-            if(err) return res.status(401).send({ success: false });//Err: Unauthorized: Invalid access token.
+        const verificationResult = verifyAccessToken(accessToken);
+        if(!verificationResult.success) return res.status(401).send({ success: false });//Err: Unauthorized: Invalid access token.
+        const user = verificationResult.decoded;
 
-            //2. Retrieve ACCOUNTID.
-            const ACCOUNTID = user.ACCOUNTID;
+        //2. Retrieve ACCOUNTID.
+        const ACCOUNTID = user.ACCOUNTID;
 
-            //3. Calculate BMI.
-            const BMI = (WEIGHT / ((HEIGHT) * (HEIGHT))); //Calculate BMI.
+        //3. Calculate BMI.
+        const BMI = (WEIGHT / ((HEIGHT) * (HEIGHT))); //Calculate BMI.
 
-            try{
-                //4. Check if PROFILE already exists on this account.
-                DB.all(sqlCheck, [ACCOUNTID, PROFILE], (err, rows) => {
+        try{
+            //4. Check if PROFILE already exists on this account.
+            DB.all(sqlCheck, [ACCOUNTID, PROFILE], (err, rows) => {
+                if(err) return res.status(500).send({ success: false });//Err: Server Err.
+                if(rows.length > 0) return res.status(409).send({ success: false });//Err: Conflict: Profile already exists.
+                
+                //5. Add new profile to database.
+                DB.run(sql, [ACCOUNTID, PROFILE, DOB, GENDER, HEIGHT, WEIGHT, BMI], (err) => {
                     if(err) return res.status(500).send({ success: false });//Err: Server Err.
-                    if(rows.length > 0) return res.status(409).send({ success: false });//Err: Conflict: Profile already exists.
-                    
-                    //5. Add new profile to database.
-                    DB.run(sql, [ACCOUNTID, PROFILE, DOB, GENDER, HEIGHT, WEIGHT, BMI], (err) => {
+
+                    //6. Retrieve PROFILEID of new profile.
+                    DB.all(sqlCheck, [ACCOUNTID, PROFILE], (err, rows) => {
                         if(err) return res.status(500).send({ success: false });//Err: Server Err.
 
-                        //6. Retrieve PROFILEID of new profile.
-                        DB.all(sqlCheck, [ACCOUNTID, PROFILE], (err, rows) => {
-                            if(err) return res.status(500).send({ success: false });//Err: Server Err.
+                        const PROFILEID = rows[0].PROFILEID;
 
-                            const PROFILEID = rows[0].PROFILEID;
-
-                            //7. Create new full token.
-                            const accessToken = generateAccessToken({ ACCOUNTID: ACCOUNTID, PROFILEID: PROFILEID });
-                            return res.status(200).send({ success: true , accessToken });//Success: Profile created.
-                        });
+                        //7. Create new full token.
+                        const accessToken = generateAccessToken({ ACCOUNTID: ACCOUNTID, PROFILEID: PROFILEID });
+                        return res.status(200).send({ success: true , accessToken });//Success: Profile created.
                     });
                 });
-            } catch(err){res.status(500).send({ success: false })}//Err: Server Err.
-        });
+            });
+        } catch(err){res.status(500).send({ success: false })}//Err: Server Err.
     } else return res.status(401).send({ success: false });//Err: Unauthorized: Access token not found.
 })
 
 //NOT DONE
-app.post('/getProfiles', async (req, res) => {
+// app.post('/getProfiles', async (req, res) => {
 
-    const accessToken = req.body.accessToken;
+//     const accessToken = req.body.accessToken;
 
-    //SQL CMD: Check if account has any profiles.
-    const sql = 'SELECT * FROM USERSTATICDATA WHERE ACCOUNTID = ?';
+//     //SQL CMD: Check if account has any profiles.
+//     const sql = 'SELECT * FROM USERSTATICDATA WHERE ACCOUNTID = ?';
     
-    jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if(err) return res.status(401).send({ success: false });//Err: Unauthorized: Invalid access token.
+//     jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+//         if(err) return res.status(401).send({ success: false });//Err: Unauthorized: Invalid access token.
 
-        try{
-            //SQL to DB: Check if email exists.
-            DB.all(sql, [user.ACCOUNTID], async (err, rows)=>{
-                if(err) return res.status(400).send({ success: false }); //Err: Bad Req.
-                if(rows.length == 0) return res.status(404).send({ success: false }); //Err: Not Found: no profiles found for account.
+//         try{
+//             //SQL to DB: Check if email exists.
+//             DB.all(sql, [user.ACCOUNTID], async (err, rows)=>{
+//                 if(err) return res.status(400).send({ success: false }); //Err: Bad Req.
+//                 if(rows.length == 0) return res.status(404).send({ success: false }); //Err: Not Found: no profiles found for account.
                 
-                return res.status(200).send({ success: true, profiles: rows }); //Success: Profiles found.
-            })
-        }
-        catch(err){res.status(500).send({ success: false })}//Err: Server Err.
-    })
-})
+//                 return res.status(200).send({ success: true, profiles: rows }); //Success: Profiles found.
+//             })
+//         }
+//         catch(err){res.status(500).send({ success: false })}//Err: Server Err.
+//     })
+// })

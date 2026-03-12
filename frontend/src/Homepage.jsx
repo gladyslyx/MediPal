@@ -1,7 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import "./CSS/Homepage.css";
+import { getAccessToken, verifyAccessToken } from "./clientSession"
 
-//Root Component: /home
+const PROFILE_PAGE = '/user';
+const PROFILE_SELECTION_PAGE = '/profile';
+
 export default function Homepage() {
 
     return (
@@ -19,6 +22,7 @@ export default function Homepage() {
 }
 
 function Card({title, description, variant, icon, callback}){
+
     return (
         <div className= {`Card ${variant === "primary" ? "card-primary" : "card-secondary"}`}>
             <div className="card-icon">
@@ -33,10 +37,14 @@ function Card({title, description, variant, icon, callback}){
 
 function TopRow() {
 
-    const nav = useNavigate()
-    const navigateUser = () =>{
-    nav('/user')
-};
+    const nav = useNavigate();
+    const navigateToProfile = () => {
+        nav(PROFILE_PAGE);
+    };
+
+    const navigateToProfileSelection = () => {
+        nav(PROFILE_SELECTION_PAGE);
+    };
 
     return (
         <div className="top-row">
@@ -65,13 +73,13 @@ function TopRow() {
                     description="View and manage family health profiles"
                     variant="primary"
                     icon="👤" 
-                    callback={navigateUser}
+                    callback={navigateToProfile}
                 />
             </div>  
         </div>
     );
 }
-
+//474 096
 function BottomRow() {
     return (
         <div className="bottom-row">
@@ -88,7 +96,7 @@ function BottomRow() {
                 <Card 
                     title="Bookings"
                     description="Make bookings with healthcare providers"
-                icon="📅"
+                    icon="📅"
                 />
             </div>
             <div className="box2">

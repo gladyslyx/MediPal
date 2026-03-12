@@ -3,6 +3,9 @@ import "./CSS/LoginRegister.css";
 import "./CSS/Err.css";
 import { setAccessToken, displayErr } from"./clientSession.jsx";
 
+const CREATE_PROFILE_PAGE = '/firstProfile';
+const LOGIN_PAGE = '/login';
+
 const API_REGISTER = 'http://localhost:3000/register';
 const API_LOGIN = 'http://localhost:3000/login';
 
@@ -32,8 +35,8 @@ export default function Register() {
 //<<<<<<Switcher Handler>>>>>>
 function Switcher() {
   const nav = useNavigate()
-  const navigate = () =>{
-    nav('/login')
+  const navigateToLogin = () =>{
+    nav(LOGIN_PAGE)
   };
 
   return (
@@ -42,7 +45,7 @@ function Switcher() {
         {/*Login Switcher*/}
         <button
           className="tab"
-          onClick={navigate}
+          onClick={navigateToLogin}
         >
           Login
         </button>
@@ -90,8 +93,8 @@ function Form(){
   * Holds navigation address.
   */
   const nav = useNavigate()
-  const navigate = () =>{
-    nav('/firstProfile')
+  const navigateToCreateProfile = () =>{
+    nav(CREATE_PROFILE_PAGE)
   };
 
   /** [ Feature Function ] 
@@ -142,7 +145,7 @@ function Form(){
 
           //3. Navigate to first profile registry page with access token.
           setAccessToken(resultLog.accessToken);
-          navigate();
+          navigateToCreateProfile();
         }
         //Failure
         else if (!resultReg.success && resReg.status == 409)
