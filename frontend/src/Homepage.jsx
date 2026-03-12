@@ -1,12 +1,18 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import "./CSS/Homepage.css";
 import { getAccessToken, verifyAccessToken } from "./clientSession"
 import NavBar from "./NavBar.jsx";
+import UserProfile from "./UserProfile.jsx";
+import ConnectedDevices from "./ConnectedDevices.jsx";
 
 const PROFILE_PAGE = '/user';
 const PROFILE_SELECTION_PAGE = '/profile';
 
 export default function Homepage() {
+
+    const [showProfile, setShowProfile] = useState(false);
+    const [showDevices, setShowDevices] = useState(false);
 
     return (
         <div className="homepage">
@@ -15,9 +21,18 @@ export default function Homepage() {
             <div className="content">
                 <h1>Welcome back, Olivia</h1>
                 <p>Here's your health overview for today.</p>
-                <TopRow />
+                <TopRow 
+                    openProfile={() => setShowProfile(true)} 
+                    openDevices={() => setShowDevices(true)} 
+                />
                 <BottomRow />
             </div>
+            {showProfile && (
+                <UserProfile onClose={() => setShowProfile(false)} />
+            )}
+            {showDevices && (
+                <ConnectedDevices onClose={() => setShowDevices(false)} />
+            )}
         </div>
     );
 }
@@ -36,16 +51,11 @@ function Card({title, description, variant, icon, callback}){
     );
 }
 
-function TopRow() {
+function TopRow({ openProfile, openDevices }) {
 
-    const nav = useNavigate();
-    const navigateToProfile = () => {
-        nav(PROFILE_PAGE);
-    };
-
-    const navigateToProfileSelection = () => {
-        nav(PROFILE_SELECTION_PAGE);
-    };
+    // const navigateToProfileSelection = () => {
+    //     nav(PROFILE_SELECTION_PAGE);
+    // };
 
     return (
         <div className="top-row">
@@ -65,6 +75,7 @@ function TopRow() {
                     description="Manage your health tracking devices"
                     variant="primary"
                     icon="📱"
+                    callback={openDevices}
                 />
             </div>
             <div className="box1">
@@ -74,7 +85,7 @@ function TopRow() {
                     description="View and manage family health profiles"
                     variant="primary"
                     icon="👤" 
-                    callback={navigateToProfile}
+                    callback={openProfile}
                 />
             </div>  
         </div>
