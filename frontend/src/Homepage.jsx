@@ -8,6 +8,7 @@ import ConnectedDevices from "./ConnectedDevices.jsx";
 import Chatbot from "./Chatbot.jsx";
 import Alerts from "./Alert.jsx";
 import Goals from "./Goals.jsx";
+import Bookings from "./Bookings.jsx";
 
 const PROFILE_PAGE = '/user';
 const PROFILE_SELECTION_PAGE = '/profile';
@@ -19,6 +20,7 @@ export default function Homepage() {
     const [showChatbot, setShowChatbot] = useState(false);
     const [showAlerts, setShowAlerts] = useState(false);
     const [showGoals, setShowGoals] = useState(false);
+    const [showBookings, setShowBookings] = useState(false);
 
     return (
         <div className="homepage">
@@ -35,6 +37,7 @@ export default function Homepage() {
                     openChatbot={() => setShowChatbot(true)}
                     openAlert={() => setShowAlerts(true)}
                     openGoals={() => setShowGoals(true)}
+                    openBookings={() => setShowBookings(true)}
                 
                 />
             </div>
@@ -52,6 +55,9 @@ export default function Homepage() {
             )}
             {showGoals && (
                 <Goals onClose={() => setShowGoals(false)} />
+            )}
+            {showBookings && (
+                <Bookings onClose={() => setShowBookings(false)} />
             )}
         </div>
     );
@@ -112,7 +118,7 @@ function TopRow({ openProfile, openDevices }) {
     );
 }
 //474 096
-function BottomRow({ openChatbot, openAlert, openGoals }) {
+function BottomRow({ openChatbot, openAlert, openGoals, openBookings }) {
     return (
         <div className="bottom-row">
             <div className="box2">
@@ -130,6 +136,7 @@ function BottomRow({ openChatbot, openAlert, openGoals }) {
                     title="Bookings"
                     description="Make bookings with healthcare providers"
                     icon="📅"
+                    callback={openBookings}
                 />
             </div>
             <div className="box2">
