@@ -7,6 +7,7 @@ import UserProfile from "./UserProfile.jsx";
 import ConnectedDevices from "./ConnectedDevices.jsx";
 import Chatbot from "./Chatbot.jsx";
 import Alerts from "./Alert.jsx";
+import Goals from "./Goals.jsx";
 
 const PROFILE_PAGE = '/user';
 const PROFILE_SELECTION_PAGE = '/profile';
@@ -17,6 +18,7 @@ export default function Homepage() {
     const [showDevices, setShowDevices] = useState(false);
     const [showChatbot, setShowChatbot] = useState(false);
     const [showAlerts, setShowAlerts] = useState(false);
+    const [showGoals, setShowGoals] = useState(false);
 
     return (
         <div className="homepage">
@@ -32,6 +34,7 @@ export default function Homepage() {
                 <BottomRow
                     openChatbot={() => setShowChatbot(true)}
                     openAlert={() => setShowAlerts(true)}
+                    openGoals={() => setShowGoals(true)}
                 
                 />
             </div>
@@ -46,6 +49,9 @@ export default function Homepage() {
             )}
             {showAlerts && (
                 <Alerts onClose={() => setShowAlerts(false)} />
+            )}
+            {showGoals && (
+                <Goals onClose={() => setShowGoals(false)} />
             )}
         </div>
     );
@@ -106,7 +112,7 @@ function TopRow({ openProfile, openDevices }) {
     );
 }
 //474 096
-function BottomRow({ openChatbot, openAlert }) {
+function BottomRow({ openChatbot, openAlert, openGoals }) {
     return (
         <div className="bottom-row">
             <div className="box2">
@@ -115,6 +121,7 @@ function BottomRow({ openChatbot, openAlert }) {
                     title="Goals"
                     description="View and set your health goals"
                     icon="🎯"
+                    callback={openGoals}
                 />
             </div>
             <div className="box2">
