@@ -53,7 +53,7 @@ export default function Alerts({ onClose }) {
         <div className="alerts-overlay">
             <div className="alerts-card">
 
-                <button className="close-btn" onClick={onClose}>✕</button>
+                <button className="close-button" onClick={onClose}>✕</button>
 
                 <h2 className="alerts-title">Alerts</h2>
                 <p className="alerts-subtitle">

@@ -16,7 +16,7 @@ export default function Homepage() {
     const [showProfile, setShowProfile] = useState(false);
     const [showDevices, setShowDevices] = useState(false);
     const [showChatbot, setShowChatbot] = useState(false);
-    const [showAlerts, setShowAlerts] = useState(false); // explain: asdf
+    const [showAlerts, setShowAlerts] = useState(false);
 
     return (
         <div className="homepage">
