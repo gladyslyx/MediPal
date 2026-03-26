@@ -6,6 +6,7 @@ import NavBar from "./NavBar.jsx";
 import UserProfile from "./UserProfile.jsx";
 import ConnectedDevices from "./ConnectedDevices.jsx";
 import Chatbot from "./Chatbot.jsx";
+import Alerts from "./Alert.jsx";
 
 const PROFILE_PAGE = '/user';
 const PROFILE_SELECTION_PAGE = '/profile';
@@ -15,6 +16,7 @@ export default function Homepage() {
     const [showProfile, setShowProfile] = useState(false);
     const [showDevices, setShowDevices] = useState(false);
     const [showChatbot, setShowChatbot] = useState(false);
+    const [showAlerts, setShowAlerts] = useState(false); // explain: asdf
 
     return (
         <div className="homepage">
@@ -29,6 +31,7 @@ export default function Homepage() {
                 />
                 <BottomRow
                     openChatbot={() => setShowChatbot(true)}
+                    openAlert={() => setShowAlerts(true)}
                 
                 />
             </div>
@@ -40,6 +43,9 @@ export default function Homepage() {
             )}
             {showChatbot && (
                 <Chatbot onClose={() => setShowChatbot(false)} />
+            )}
+            {showAlerts && (
+                <Alerts onClose={() => setShowAlerts(false)} />
             )}
         </div>
     );
@@ -100,7 +106,7 @@ function TopRow({ openProfile, openDevices }) {
     );
 }
 //474 096
-function BottomRow({ openChatbot }) {
+function BottomRow({ openChatbot, openAlert }) {
     return (
         <div className="bottom-row">
             <div className="box2">
@@ -125,6 +131,7 @@ function BottomRow({ openChatbot }) {
                     title="Alerts"
                     description="View and manage health alerts"
                     icon="🔔"
+                    callback={openAlert}
                 />
             </div>
             <div className="box2">

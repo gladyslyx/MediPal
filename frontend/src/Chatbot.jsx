@@ -38,7 +38,7 @@ export default function Chatbot({ onClose }) {
                         <MessageCircle size={28} />
                         <span>MediPal Assistant</span>
                     </div>
-                    <button className="close-btn" onClick={onClose}>✕</button>
+                    <button className="chatbot-close-btn" onClick={onClose}>✕</button>
                 </div>
 
                 <div className="chatbot-body">
