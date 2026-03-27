@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; 
 import { useState } from "react";
 import "./CSS/Homepage.css";
 import { getAccessToken, verifyAccessToken } from "./clientSession"
@@ -20,6 +20,7 @@ export default function Homepage() {
         <div className="homepage">
             
             <NavBar /> 
+            
             <div className="content">
                 <h1>Welcome back, Olivia</h1>
                 <p>Here's your health overview for today.</p>
@@ -29,9 +30,9 @@ export default function Homepage() {
                 />
                 <BottomRow
                     openChatbot={() => setShowChatbot(true)}
-                
                 />
             </div>
+
             {showProfile && (
                 <UserProfile onClose={() => setShowProfile(false)} />
             )}
@@ -99,7 +100,7 @@ function TopRow({ openProfile, openDevices }) {
         </div>
     );
 }
-//474 096
+
 function BottomRow({ openChatbot }) {
     return (
         <div className="bottom-row">
@@ -135,7 +136,7 @@ function BottomRow({ openChatbot }) {
                     icon="✅"
                 />
             </div>
-            <div className="box3">
+            <div className="box2">
             {/* chatbot ****figure diff css */}
             <Card 
                 title="Chatbot"

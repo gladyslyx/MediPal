@@ -47,3 +47,6 @@ npm init -y
 
 BrowserRouter package:
 npm install react-router-dom
+
+lucide react package:
+npm install lucide-react

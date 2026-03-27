@@ -1,10 +1,10 @@
-import "./CSS/UserProfile.css";
+import "./CSS/UserProfile.css"; 
 
 export default function UserProfile({ onClose }) {
     return (
         <div className="profile-overlay">
             <div className="profile-card">
-                <button className="close-btn" onClick={onClose}>✕</button>
+                <button className="close-button" onClick={onClose}> ✕ </button>
                 <HeaderSection />
                 <Divider />
                 <InfoSection />

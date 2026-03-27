@@ -6,7 +6,7 @@ export default function ConnectedDevices({ onClose }) {
         <div className="devices-overlay">
             <div className="devices-card">
 
-                <button className="close-btn" onClick={onClose}>✕</button>
+                <button className="close-button" onClick={onClose}>✕</button>
 
                 <h2 className="devices-title">Connected Devices</h2>
                 <p className="devices-subtitle">

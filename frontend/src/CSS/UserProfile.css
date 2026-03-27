@@ -27,11 +27,12 @@
 }
 
 /* Close button */
-.close-btn {
+.close-button {
     position: absolute;
+    right: 20px;
+    top: 20px;
     background: none;
     color: #000000;
-    border: none;
     font-size: 28px;
     cursor: pointer;
     padding: 10px 18px;

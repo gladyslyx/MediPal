@@ -20,12 +20,13 @@
     position:relative;
 }
 
-.close-btn{
+.close-button{
     position:absolute;
     right:25px;
     top:20px;
     border:none;
     background:none;
+    color: black;
     font-size:26px;
     cursor:pointer;
 }

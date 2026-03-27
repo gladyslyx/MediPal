@@ -17,7 +17,8 @@ export default function Chatbot({ onClose }) {
         navigation: "Use the homepage cards to access Biomarkers, Devices, Goals, and Alerts. Each section helps manage your health information.",
         goals: "You can set goals from the Goals section. We recommend 8000+ steps daily and regular health monitoring.",
         edit: "To edit your personal health data, open the Profile Management card from the homepage.",
-        alert: "Health alerts notify you if biomarker values exceed safe ranges. You can review alerts in the Alerts section."
+        alert: "Health alerts notify you if biomarker values exceed safe ranges. You can review alerts in the Alerts section.",
+        confusion: "I'm sorry, I didn't understand that. Please try asking something else or contact support for further assistance."
     };
 
     function sendResponse(type) {
@@ -87,11 +88,13 @@ export default function Chatbot({ onClose }) {
                 <div className="chatbot-input">
 
                     <input
+                        id="chatSubmit"
                         type="text"
                         placeholder="Type your message..."
                     />
-
-                    <Send size={22} color="black"/>
+                    <button type="submit" onClick={() => {sendResponse("confusion"); document.getElementById("chatSubmit").value = "";}}>
+                        <Send size={22} color="black"/>
+                    </button>
 
                 </div>
 

@@ -1,17 +1,20 @@
 .homepage {
     background-color: #F1E6D8;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    overflow: hidden;
 }   
 
 .content {
+    width: 95%;
     max-width: 1200px;
     margin: 0 auto;
     padding:40px;
+    overflow: hidden;
 }
 
 .content h1{
@@ -101,7 +104,7 @@
 .open {
     text-align: center;
     display: block;
-    bottom: 20px;
+    bottom: 0;
     right: 25px;
     font-weight: bold;
     cursor: pointer;
