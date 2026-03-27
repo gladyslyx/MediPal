@@ -15,6 +15,8 @@ import BiomarkerPage from "./Biomarker.jsx";
 const PROFILE_PAGE = '/user';
 const PROFILE_SELECTION_PAGE = '/profile';
 
+const BIOMARKER_PAGE = '/biomarkers';
+
 export default function Homepage() {
 
     const [showProfile, setShowProfile] = useState(false);
@@ -24,7 +26,11 @@ export default function Homepage() {
     const [showGoals, setShowGoals] = useState(false);
     const [showBookings, setShowBookings] = useState(false);
     const [showApprovals, setShowApprovals] = useState(false);
-    const [showBiomarkers, setShowBiomarkers] = useState(false);
+
+    const nav = useNavigate()
+      const navigateToBiomarkers = () =>{
+        nav(BIOMARKER_PAGE)
+      };
 
     return (
         <div className="homepage">
@@ -35,20 +41,16 @@ export default function Homepage() {
                 <h1>Welcome back, Olivia</h1>
                 <p>Here's your health overview for today.</p>
                 <TopRow 
+                    openBiomarkers={navigateToBiomarkers}
                     openProfile={() => setShowProfile(true)} 
-                    openDevices={() => setShowDevices(true)} 
-                    openBiomarkers={() => setShowBiomarkers(true)}
+                    openDevices={() => setShowDevices(true)}
                 />
                 <BottomRow
-                    openChatbot={() => setShowChatbot(true)}
-<<<<<<< HEAD
-=======
                     openAlert={() => setShowAlerts(true)}
                     openGoals={() => setShowGoals(true)}
                     openBookings={() => setShowBookings(true)}
                     openApprovals={() => setShowApprovals(true)}
-                
->>>>>>> 523541f75e15157559f3cb6953f07907db956d81
+                    openChatbot={() => setShowChatbot(true)}
                 />
             </div>
 
@@ -73,9 +75,6 @@ export default function Homepage() {
             {showApprovals && (
                 <Approvals onClose={() => setShowApprovals(false)} />
             )}
-            {showBiomarkers && (
-                <BiomarkerPage onClose={() => setShowBiomarkers(false)} />
-            )}
         </div>
     );
 }
@@ -95,10 +94,6 @@ function Card({title, description, variant, icon, callback}){
 }
 
 function TopRow({ openProfile, openDevices, openBiomarkers }) {
-
-    // const navigateToProfileSelection = () => {
-    //     nav(PROFILE_SELECTION_PAGE);
-    // };
 
     return (
         <div className="top-row">
@@ -135,13 +130,8 @@ function TopRow({ openProfile, openDevices, openBiomarkers }) {
         </div>
     );
 }
-<<<<<<< HEAD
 
-function BottomRow({ openChatbot }) {
-=======
-//474 096
 function BottomRow({ openChatbot, openAlert, openGoals, openBookings, openApprovals }) {
->>>>>>> 523541f75e15157559f3cb6953f07907db956d81
     return (
         <div className="bottom-row">
             <div className="box2">

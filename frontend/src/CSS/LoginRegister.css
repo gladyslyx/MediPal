@@ -23,7 +23,7 @@
   margin-bottom: 30px;
 }
 
-.tab {
+.switch.tab {
   flex: 1;
   padding: 14px;
   border: none;
@@ -32,7 +32,7 @@
   background: transparent;
 }
 
-.tab.active {
+.switch.tab.active{
   background: #b12b3a;
   color: white;
   border-radius: 30px;

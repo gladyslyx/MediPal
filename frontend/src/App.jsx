@@ -4,8 +4,7 @@ import Login from "./Login.jsx"
 import Register from './Register.jsx';
 import RegisterProfile from "./CreateProfileFirst.jsx";
 import Homepage from "./Homepage.jsx";
-import UserProfile from "./UserProfile.jsx";
-import ProfileSelection from "./ProfileSelection.jsx";
+import BiomarkerPage from "./Biomarker.jsx";
 import MedHomepage from "./MedHomepage.jsx";
 import MedReqAccess from "./MedReqAccess.jsx";
 
@@ -41,9 +40,9 @@ function App() {
             |-----> /profile
       */}
       <Route path='/home' element={<Homepage/>}/>
-      <Route path='/user' element={<UserProfile/>}/>
-      <Route path='/profile' element={<ProfileSelection/>}/>
-      
+
+      <Route path='/biomarkers' element={<BiomarkerPage/>}/>
+
     </Routes>
     </BrowserRouter>
   )
