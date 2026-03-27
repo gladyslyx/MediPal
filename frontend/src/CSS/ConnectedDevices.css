@@ -28,7 +28,8 @@
     background:none;
     color: black;
     font-size:26px;
-    cursor:pointer;
+    cursor:pointer; 
+    color:black;
 }
 
 .devices-title{

@@ -6,6 +6,11 @@ import NavBar from "./NavBar.jsx";
 import UserProfile from "./UserProfile.jsx";
 import ConnectedDevices from "./ConnectedDevices.jsx";
 import Chatbot from "./Chatbot.jsx";
+import Alerts from "./Alert.jsx";
+import Goals from "./Goals.jsx";
+import Bookings from "./Bookings.jsx";
+import Approvals from "./Approvals.jsx";
+import BiomarkerPage from "./Biomarker.jsx";
 
 const PROFILE_PAGE = '/user';
 const PROFILE_SELECTION_PAGE = '/profile';
@@ -15,6 +20,11 @@ export default function Homepage() {
     const [showProfile, setShowProfile] = useState(false);
     const [showDevices, setShowDevices] = useState(false);
     const [showChatbot, setShowChatbot] = useState(false);
+    const [showAlerts, setShowAlerts] = useState(false);
+    const [showGoals, setShowGoals] = useState(false);
+    const [showBookings, setShowBookings] = useState(false);
+    const [showApprovals, setShowApprovals] = useState(false);
+    const [showBiomarkers, setShowBiomarkers] = useState(false);
 
     return (
         <div className="homepage">
@@ -27,9 +37,18 @@ export default function Homepage() {
                 <TopRow 
                     openProfile={() => setShowProfile(true)} 
                     openDevices={() => setShowDevices(true)} 
+                    openBiomarkers={() => setShowBiomarkers(true)}
                 />
                 <BottomRow
                     openChatbot={() => setShowChatbot(true)}
+<<<<<<< HEAD
+=======
+                    openAlert={() => setShowAlerts(true)}
+                    openGoals={() => setShowGoals(true)}
+                    openBookings={() => setShowBookings(true)}
+                    openApprovals={() => setShowApprovals(true)}
+                
+>>>>>>> 523541f75e15157559f3cb6953f07907db956d81
                 />
             </div>
 
@@ -41,6 +60,21 @@ export default function Homepage() {
             )}
             {showChatbot && (
                 <Chatbot onClose={() => setShowChatbot(false)} />
+            )}
+            {showAlerts && (
+                <Alerts onClose={() => setShowAlerts(false)} />
+            )}
+            {showGoals && (
+                <Goals onClose={() => setShowGoals(false)} />
+            )}
+            {showBookings && (
+                <Bookings onClose={() => setShowBookings(false)} />
+            )}
+            {showApprovals && (
+                <Approvals onClose={() => setShowApprovals(false)} />
+            )}
+            {showBiomarkers && (
+                <BiomarkerPage onClose={() => setShowBiomarkers(false)} />
             )}
         </div>
     );
@@ -60,7 +94,7 @@ function Card({title, description, variant, icon, callback}){
     );
 }
 
-function TopRow({ openProfile, openDevices }) {
+function TopRow({ openProfile, openDevices, openBiomarkers }) {
 
     // const navigateToProfileSelection = () => {
     //     nav(PROFILE_SELECTION_PAGE);
@@ -75,6 +109,7 @@ function TopRow({ openProfile, openDevices }) {
                     description="Track and analyse health metrics"
                     variant="primary"
                     icon="💉"
+                    callback={openBiomarkers}
                 />
             </div>
             <div className="box1">
@@ -100,8 +135,13 @@ function TopRow({ openProfile, openDevices }) {
         </div>
     );
 }
+<<<<<<< HEAD
 
 function BottomRow({ openChatbot }) {
+=======
+//474 096
+function BottomRow({ openChatbot, openAlert, openGoals, openBookings, openApprovals }) {
+>>>>>>> 523541f75e15157559f3cb6953f07907db956d81
     return (
         <div className="bottom-row">
             <div className="box2">
@@ -110,6 +150,7 @@ function BottomRow({ openChatbot }) {
                     title="Goals"
                     description="View and set your health goals"
                     icon="🎯"
+                    callback={openGoals}
                 />
             </div>
             <div className="box2">
@@ -118,6 +159,7 @@ function BottomRow({ openChatbot }) {
                     title="Bookings"
                     description="Make bookings with healthcare providers"
                     icon="📅"
+                    callback={openBookings}
                 />
             </div>
             <div className="box2">
@@ -126,6 +168,7 @@ function BottomRow({ openChatbot }) {
                     title="Alerts"
                     description="View and manage health alerts"
                     icon="🔔"
+                    callback={openAlert}
                 />
             </div>
             <div className="box2">
@@ -134,6 +177,7 @@ function BottomRow({ openChatbot }) {
                     title="Approvals"
                     description="Approve or deny access requests"
                     icon="✅"
+                    callback={openApprovals}
                 />
             </div>
             <div className="box2">

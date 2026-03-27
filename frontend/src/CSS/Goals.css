@@ -1,0 +1,140 @@
+.goals-overlay{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,0.3);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    z-index:1000;
+}
+
+.goals-card{
+    width:650px;
+    height:500px; /* FIXED HEIGHT */
+
+    background:#f5f5f5;
+    border-radius:25px;
+
+    padding:25px;
+
+    position:relative;
+
+    display:flex;
+    flex-direction:column;
+}
+
+/* CLOSE BUTTON */
+.close-button{
+    position:absolute;
+    top:20px;
+    right:20px;
+
+    border:none;
+    background:none;
+    font-size:22px;
+    cursor:pointer;
+}
+
+/* HEADER */
+.goals-title{
+    font-size:28px;
+    color: black;
+}
+
+.goals-subtitle{
+    color:#777;
+    font-size:14px;
+    margin-bottom:15px;
+}
+
+/* ===== SCROLL AREA ===== */
+
+.goals-content{
+    overflow-y:auto;   /* 🔥 THIS ENABLES SCROLL */
+    padding-right:10px;
+}
+
+/* ===== ACHIEVEMENTS ===== */
+
+.achievements-row{
+    display:flex;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.achievement-card{
+    flex:1;
+
+    background:linear-gradient(#AA2B3A,#28314E);
+    color:white;
+
+    padding:15px;
+    border-radius:20px;
+
+    text-align:center;
+}
+
+.achievement-icon{
+    margin-bottom:5px;
+}
+
+/* ===== GOAL ITEM ===== */
+
+.goal-item{
+    border:2px solid #AA2B3A;
+    border-radius:15px;
+
+    padding:15px;
+    margin-bottom:15px;
+}
+
+.goal-title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    font-weight:bold;
+    color:black;
+    margin-bottom:10px;
+}
+
+.goal-info{
+    display:flex;
+    justify-content:space-between;
+    font-size:14px;
+}
+
+.goal-values{
+    text-align:right;
+}
+
+.goals-card{
+    color:black;
+}
+
+/* PROGRESS BAR */
+
+.progress-bar{
+    height:10px;
+    background:#ddd;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+.progress-fill{
+    height:100%;
+    background:#28314E;
+    border-radius:10px;
+}
+
+.progress-text{
+    text-align:right;
+    font-size:12px;
+    margin-top:5px;
+}

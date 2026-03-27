@@ -6,7 +6,7 @@ export default function RequestAccess({ onClose }) {
             <div className="request-container">
 
                 {/* Close Button */}
-                <div className="close-btn" onClick={onClose}>✕</div>
+                <div className="close-button" onClick={onClose}>✕</div>
 
                 {/* Title */}
                 <h1 className="request-title">👥+ Request Patient Data Access</h1>

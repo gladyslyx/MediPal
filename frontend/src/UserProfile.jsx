@@ -4,7 +4,11 @@ export default function UserProfile({ onClose }) {
     return (
         <div className="profile-overlay">
             <div className="profile-card">
+<<<<<<< HEAD
                 <button className="close-button" onClick={onClose}> ✕ </button>
+=======
+                <button className="close-button" onClick={onClose}>✕</button>
+>>>>>>> 523541f75e15157559f3cb6953f07907db956d81
                 <HeaderSection />
                 <Divider />
                 <InfoSection />

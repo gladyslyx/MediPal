@@ -7,7 +7,7 @@ export default function ProfilesPopup({ onClose }) {
                 className="profiles-card"
                 onClick={(e) => e.stopPropagation()}
             >
-                <button className="close-btn" onClick={onClose}>✕</button>
+                <button className="close-button" onClick={onClose}>✕</button>
 
                 <h2 className="title">Profiles</h2>
                 <p className="subtitle">

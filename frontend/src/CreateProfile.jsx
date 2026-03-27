@@ -10,7 +10,7 @@
 //                 className="create-card"
 //                 onClick={(e) => e.stopPropagation()}
 //             >
-//                 <button className="close-btn" onClick={onClose}>✕</button>
+//                 <button className="close-button" onClick={onClose}>✕</button>
 
 //                 <h2 className="title">Create profile</h2>
 
