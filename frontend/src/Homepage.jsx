@@ -9,6 +9,8 @@ import Chatbot from "./Chatbot.jsx";
 import Alerts from "./Alert.jsx";
 import Goals from "./Goals.jsx";
 import Bookings from "./Bookings.jsx";
+import Approvals from "./Approvals.jsx";
+import BiomarkerPage from "./Biomarker.jsx";
 
 const PROFILE_PAGE = '/user';
 const PROFILE_SELECTION_PAGE = '/profile';
@@ -21,6 +23,8 @@ export default function Homepage() {
     const [showAlerts, setShowAlerts] = useState(false);
     const [showGoals, setShowGoals] = useState(false);
     const [showBookings, setShowBookings] = useState(false);
+    const [showApprovals, setShowApprovals] = useState(false);
+    const [showBiomarkers, setShowBiomarkers] = useState(false);
 
     return (
         <div className="homepage">
@@ -32,12 +36,14 @@ export default function Homepage() {
                 <TopRow 
                     openProfile={() => setShowProfile(true)} 
                     openDevices={() => setShowDevices(true)} 
+                    openBiomarkers={() => setShowBiomarkers(true)}
                 />
                 <BottomRow
                     openChatbot={() => setShowChatbot(true)}
                     openAlert={() => setShowAlerts(true)}
                     openGoals={() => setShowGoals(true)}
                     openBookings={() => setShowBookings(true)}
+                    openApprovals={() => setShowApprovals(true)}
                 
                 />
             </div>
@@ -59,6 +65,12 @@ export default function Homepage() {
             {showBookings && (
                 <Bookings onClose={() => setShowBookings(false)} />
             )}
+            {showApprovals && (
+                <Approvals onClose={() => setShowApprovals(false)} />
+            )}
+            {showBiomarkers && (
+                <BiomarkerPage onClose={() => setShowBiomarkers(false)} />
+            )}
         </div>
     );
 }
@@ -77,7 +89,7 @@ function Card({title, description, variant, icon, callback}){
     );
 }
 
-function TopRow({ openProfile, openDevices }) {
+function TopRow({ openProfile, openDevices, openBiomarkers }) {
 
     // const navigateToProfileSelection = () => {
     //     nav(PROFILE_SELECTION_PAGE);
@@ -92,6 +104,7 @@ function TopRow({ openProfile, openDevices }) {
                     description="Track and analyse health metrics"
                     variant="primary"
                     icon="💉"
+                    callback={openBiomarkers}
                 />
             </div>
             <div className="box1">
@@ -118,7 +131,7 @@ function TopRow({ openProfile, openDevices }) {
     );
 }
 //474 096
-function BottomRow({ openChatbot, openAlert, openGoals, openBookings }) {
+function BottomRow({ openChatbot, openAlert, openGoals, openBookings, openApprovals }) {
     return (
         <div className="bottom-row">
             <div className="box2">
@@ -154,6 +167,7 @@ function BottomRow({ openChatbot, openAlert, openGoals, openBookings }) {
                     title="Approvals"
                     description="Approve or deny access requests"
                     icon="✅"
+                    callback={openApprovals}
                 />
             </div>
             <div className="box3">

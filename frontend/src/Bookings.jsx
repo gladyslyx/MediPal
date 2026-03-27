@@ -62,7 +62,7 @@ function Providers() {
                 <div className="provider-card" key={i}>
                     <div className="provider-info">
                         <User size={22} />
-                        <div classname="try">
+                        <div>
                             <h4>{p.name}</h4>
                             <p>{p.role}</p>
                         </div>
