@@ -7,7 +7,8 @@ import Homepage from "./Homepage.jsx";
 import BiomarkerPage from "./Biomarker.jsx";
 import MedHomepage from "./MedHomepage.jsx";
 import MedReqAccess from "./MedReqAccess.jsx";
-import BiomarkerPage from "./Biomarker.jsx";
+import UserProfile from "./UserProfile.jsx";
+import ProfileSelection from "./ProfileSelection.jsx";
 
 //Web application runner.
 function App() {
