@@ -14,40 +14,41 @@ import ProfileSelection from "./ProfileSelection.jsx";
 function App() {
 
   return (
-    <BrowserRouter>
-    <Routes>
+    <MedReqAccess/>
+  //   <BrowserRouter>
+  //   <Routes>
 
-      {/* Index Path */}
-      <Route index element={<Navigate to="/login" replace/>}/>
+  //     {/* Index Path */}
+  //     <Route index element={<Navigate to="/login" replace/>}/>
 
-      {/* Login Page
-          Index --> /login --> /home (if profile found)
-                      |------> /firstProfile (if no profiles found)
-      */}
-      <Route path="/login" element={<Login/>}/>
+  //     {/* Login Page
+  //         Index --> /login --> /home (if profile found)
+  //                     |------> /firstProfile (if no profiles found)
+  //     */}
+  //     <Route path="/login" element={<Login/>}/>
 
-      {/* Register Page
-          /register --> /firstProfile
-      */}
-      <Route path='/register' element={<Register/>}/>
+  //     {/* Register Page
+  //         /register --> /firstProfile
+  //     */}
+  //     <Route path='/register' element={<Register/>}/>
 
-      {/* First Profile Creation Page
-          /login ------> /firstProfile --> /home
-          /register ----------| 
-      */}
-      <Route path='/firstProfile' element={<RegisterProfile/>}/>
+  //     {/* First Profile Creation Page
+  //         /login ------> /firstProfile --> /home
+  //         /register ----------| 
+  //     */}
+  //     <Route path='/firstProfile' element={<RegisterProfile/>}/>
 
-      {/* Home Page
-          /home --> /user
-            |-----> /profile
-      */}
-      <Route path='/home' element={<Homepage/>}/>
-      <Route path='/user' element={<UserProfile/>}/>
-      <Route path='/profile' element={<ProfileSelection/>}/>
-      <Route path="/biomarker" element={<BiomarkerPage />} />
+  //     {/* Home Page
+  //         /home --> /user
+  //           |-----> /profile
+  //     */}
+  //     <Route path='/home' element={<Homepage/>}/>
+  //     <Route path='/user' element={<UserProfile/>}/>
+  //     <Route path='/profile' element={<ProfileSelection/>}/>
+  //     <Route path="/biomarker" element={<BiomarkerPage />} />
       
-    </Routes>
-    </BrowserRouter>
+  //   </Routes>
+  //   </BrowserRouter>
   )
 }
 
