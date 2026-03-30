@@ -24,7 +24,7 @@ export default function Homepage() {
     const [showGoals, setShowGoals] = useState(false);
     const [showBookings, setShowBookings] = useState(false);
     const [showApprovals, setShowApprovals] = useState(false);
-    const [showBiomarkers, setShowBiomarkers] = useState(false);
+    const navigate = useNavigate();
 
     return (
         <div className="homepage">
@@ -37,18 +37,15 @@ export default function Homepage() {
                 <TopRow 
                     openProfile={() => setShowProfile(true)} 
                     openDevices={() => setShowDevices(true)} 
-                    openBiomarkers={() => setShowBiomarkers(true)}
+                    openBiomarkers={() => navigate("/biomarker")}
                 />
                 <BottomRow
                     openChatbot={() => setShowChatbot(true)}
-<<<<<<< HEAD
-=======
                     openAlert={() => setShowAlerts(true)}
                     openGoals={() => setShowGoals(true)}
                     openBookings={() => setShowBookings(true)}
                     openApprovals={() => setShowApprovals(true)}
                 
->>>>>>> 523541f75e15157559f3cb6953f07907db956d81
                 />
             </div>
 
@@ -72,9 +69,6 @@ export default function Homepage() {
             )}
             {showApprovals && (
                 <Approvals onClose={() => setShowApprovals(false)} />
-            )}
-            {showBiomarkers && (
-                <BiomarkerPage onClose={() => setShowBiomarkers(false)} />
             )}
         </div>
     );
@@ -135,13 +129,8 @@ function TopRow({ openProfile, openDevices, openBiomarkers }) {
         </div>
     );
 }
-<<<<<<< HEAD
-
-function BottomRow({ openChatbot }) {
-=======
 //474 096
 function BottomRow({ openChatbot, openAlert, openGoals, openBookings, openApprovals }) {
->>>>>>> 523541f75e15157559f3cb6953f07907db956d81
     return (
         <div className="bottom-row">
             <div className="box2">

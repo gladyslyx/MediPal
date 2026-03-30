@@ -8,6 +8,7 @@ import UserProfile from "./UserProfile.jsx";
 import ProfileSelection from "./ProfileSelection.jsx";
 import MedHomepage from "./MedHomepage.jsx";
 import MedReqAccess from "./MedReqAccess.jsx";
+import BiomarkerPage from "./Biomarker.jsx";
 
 //Web application runner.
 function App() {
@@ -43,6 +44,7 @@ function App() {
       <Route path='/home' element={<Homepage/>}/>
       <Route path='/user' element={<UserProfile/>}/>
       <Route path='/profile' element={<ProfileSelection/>}/>
+      <Route path="/biomarker" element={<BiomarkerPage />} />
       
     </Routes>
     </BrowserRouter>
