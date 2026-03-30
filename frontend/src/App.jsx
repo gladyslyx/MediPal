@@ -4,8 +4,7 @@ import Login from "./Login.jsx"
 import Register from './Register.jsx';
 import RegisterProfile from "./CreateProfileFirst.jsx";
 import Homepage from "./Homepage.jsx";
-import UserProfile from "./UserProfile.jsx";
-import ProfileSelection from "./ProfileSelection.jsx";
+import BiomarkerPage from "./Biomarker.jsx";
 import MedHomepage from "./MedHomepage.jsx";
 import MedReqAccess from "./MedReqAccess.jsx";
 import BiomarkerPage from "./Biomarker.jsx";

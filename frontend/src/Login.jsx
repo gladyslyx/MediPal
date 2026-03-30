@@ -47,14 +47,14 @@ function Switcher() {
       <div className="tabs">
         {/*Login Switcher*/}
         <button
-          className="tab active"
+          className="switch tab active"
         >
           Login
         </button>
 
         {/*Register Switcher*/}
         <button
-          className="tab"
+          className="switch tab"
           onClick={navigateToRegister}
         >
           Register

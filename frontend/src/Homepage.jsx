@@ -15,6 +15,8 @@ import BiomarkerPage from "./Biomarker.jsx";
 const PROFILE_PAGE = '/user';
 const PROFILE_SELECTION_PAGE = '/profile';
 
+const BIOMARKER_PAGE = '/biomarkers';
+
 export default function Homepage() {
 
     const [showProfile, setShowProfile] = useState(false);
@@ -90,10 +92,6 @@ function Card({title, description, variant, icon, callback}){
 
 function TopRow({ openProfile, openDevices, openBiomarkers }) {
 
-    // const navigateToProfileSelection = () => {
-    //     nav(PROFILE_SELECTION_PAGE);
-    // };
-
     return (
         <div className="top-row">
             <div className="box1">
@@ -129,7 +127,6 @@ function TopRow({ openProfile, openDevices, openBiomarkers }) {
         </div>
     );
 }
-//474 096
 function BottomRow({ openChatbot, openAlert, openGoals, openBookings, openApprovals }) {
     return (
         <div className="bottom-row">
