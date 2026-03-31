@@ -49,9 +49,9 @@ export default function Bookings({ onClose }) {
 function Providers() {
 
     const providers = [
-        { name: "Dr. Lisa Thompson", role: "Cardiologist" },
-        { name: "Dr. James Chen", role: "Nutritionist" },
-        { name: "Dr. William Tan", role: "General Practitioner" }
+        { name: "Jane Thompson", role: "Patient" },
+        { name: "Alicia Carter", role: "Patient" },
+        { name: "Sylvia Wong", role: "Patient" }
     ];
 
     return (
@@ -185,7 +185,7 @@ function MyBookings() {
     const bookings = [
         {
             date: "Mar 15",
-            name: "Dr. James Chen",
+            name: "Lisa Liu",
             role: "Nutritionist",
             time: "10:00 AM",
             type: "In-Person",
@@ -194,7 +194,7 @@ function MyBookings() {
         },
         {
             date: "Apr 28",
-            name: "Dr. William Tan",
+            name: "Valerie Tan",
             role: "General Practitioner",
             time: "8:00 AM",
             type: "Video Call",

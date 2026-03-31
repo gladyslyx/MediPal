@@ -17,7 +17,6 @@ export default function MedReqAccess({ onClose }) {
                         <p>Submit a request to access patient health data</p>
                     </div>
                 </div>
-
                 <hr />
 
                 {/* FORM */}

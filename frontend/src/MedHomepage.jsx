@@ -1,7 +1,10 @@
 import "./CSS/MedHomepage.css";
 import UserProfile from "./UserProfile";
+import { useState } from "react";
+import MedReqAccess from "./MedReqAccess.jsx";
 
 export default function Homepage() {
+    const [showMedReq, setShowMedReq] = useState(false);
 
     return (
         <div className="medhomepage">
@@ -10,14 +13,16 @@ export default function Homepage() {
             <div className="content">
                 <h1>Welcome, Dr. Andy</h1>
                 <p>Manage your patient data access and monitor health metrics.</p>
-                <TopRow />
+                <TopRow openMedReq={() => setShowMedReq(true)} />
                 <BottomRow />
             </div>
+            {showMedReq && (
+                <MedReqAccess onClose={() => setShowMedReq(false)} />)}
         </div>
     );
 }
 
-function Card({title, description,variant, icon}){
+function Card({title, description,variant, icon, callback}){
     return (
         <div className= {`Card ${variant === "primary" ? "card-primary" : "card-secondary"}`}>
             <div className="card-icon">
@@ -25,12 +30,12 @@ function Card({title, description,variant, icon}){
             </div>
             <h2>{title}</h2>
             <p>{description}</p>
-            <span className="open"> Open &gt; </span>
+            <span className="open" onClick={callback}> Open &gt; </span>
         </div>
     );
 }
 
-function TopRow() {
+function TopRow({openMedReq}) {
     return (
         <div className="top-row">
             <div className="box1">
@@ -40,6 +45,7 @@ function TopRow() {
                     description="Submit new patient data access request"
                     variant="primary"
                     icon="👤"
+                    callback={openMedReq}
                 />
             </div>
             <div className="box1">
@@ -77,8 +83,8 @@ function BottomRow() {
             <div className="box2">
                 {/* active access */}
                 <Card 
-                    title="Active access"
-                    description="19 active access"
+                    title="Bookings"
+                    description="3 Upcoming Appointments"
                     icon=""
                 />
             </div>
