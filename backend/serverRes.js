@@ -26,14 +26,18 @@ import { generateAccessToken, verifyAccessToken } from "./funcPack.js";
 
 const app = express();
 app.use(bodyParser.json()); //Allows JSON read.
-app.use(cors()); //Allow cross-origin requests.
+//app.use(cors()); //Allow cross-origin requests.
+app.use(cors({
+    origin: "*"
+}));
 
 //Contains resource API endpoints.
 
 //>>SET UP>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 //Port number. Currently set to 4000, local host.
-const portCode = 4000;
+//const portCode = 4000;
+const portCode = process.env.PORT || 3000;
 
 //Port listener. Logs message if successful.
 app.listen(portCode, (err) => {
