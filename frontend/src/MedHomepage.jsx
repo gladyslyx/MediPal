@@ -1,30 +1,41 @@
 import "./CSS/MedHomepage.css";
-import UserProfile from "./UserProfile";
 import { useState } from "react";
 import MedReqAccess from "./MedReqAccess.jsx";
+import MedApproval from "./MedApproval.jsx";
+import { UserPlus, ClipboardList, Users, Clock, Calendar, MessageCircle } from "lucide-react";
 
 export default function Homepage() {
     const [showMedReq, setShowMedReq] = useState(false);
+    const [showApproval, setShowApproval] = useState(false);
 
     return (
         <div className="medhomepage">
-            
-            {/* <Navbar /> */}
             <div className="content">
                 <h1>Welcome, Dr. Andy</h1>
                 <p>Manage your patient data access and monitor health metrics.</p>
-                <TopRow openMedReq={() => setShowMedReq(true)} />
+
+                <TopRow 
+                    openMedReq={() => setShowMedReq(true)}
+                    openMedAppr={() => setShowApproval(true)}
+                />
+
                 <BottomRow />
             </div>
+
             {showMedReq && (
-                <MedReqAccess onClose={() => setShowMedReq(false)} />)}
+                <MedReqAccess onClose={() => setShowMedReq(false)} />
+            )}
+
+            {showApproval && (
+                <MedApproval onClose={() => setShowApproval(false)} />
+            )}
         </div>
     );
 }
 
-function Card({title, description,variant, icon, callback}){
+function Card({ title, description, variant, icon, callback }) {
     return (
-        <div className= {`Card ${variant === "primary" ? "card-primary" : "card-secondary"}`}>
+        <div className={`Card ${variant === "primary" ? "card-primary" : "card-secondary"}`}>
             <div className="card-icon">
                 {icon}
             </div>
@@ -35,26 +46,26 @@ function Card({title, description,variant, icon, callback}){
     );
 }
 
-function TopRow({openMedReq}) {
+function TopRow({ openMedReq, openMedAppr }) {
     return (
         <div className="top-row">
             <div className="box1">
-                {/* Request Data Access */}
                 <Card 
                     title="Request Data Access"
                     description="Submit new patient data access request"
                     variant="primary"
-                    icon="👤"
+                    icon={<UserPlus size={28} />}
                     callback={openMedReq}
                 />
             </div>
+
             <div className="box1">
-                {/* Check Status */}
                 <Card 
                     title="Check Status"
                     description="View pending and approved request"
                     variant="primary"
-                    icon =" "
+                    icon={<ClipboardList size={28} />}
+                    callback={openMedAppr}
                 />
             </div> 
         </div>
@@ -64,38 +75,39 @@ function TopRow({openMedReq}) {
 function BottomRow() {
     return (
         <div className="bottom-row">
+
             <div className="box2">
-                {/* Total Patients */}
                 <Card 
                     title="Total Patients"
                     description="24 persons"
-                    icon=" "
+                    icon={<Users size={26} />}
                 />
             </div>
+
             <div className="box2">
-                {/* Pending */}
                 <Card 
                     title="Pending"
                     description="5 pending requests"
-                    icon=""
+                    icon={<Clock size={26} />}
                 />
             </div>
+
             <div className="box2">
-                {/* active access */}
                 <Card 
                     title="Bookings"
                     description="3 Upcoming Appointments"
-                    icon=""
+                    icon={<Calendar size={26} />}
                 />
             </div>
+
             <div className="box2">
-                {/* Chatbot */}
                 <Card 
                     title="Chatbot"
                     description="FAQs & Assistance"
-                    icon=""
+                    icon={<MessageCircle size={26} />}
                 />
             </div>
+
         </div>
     );
 }

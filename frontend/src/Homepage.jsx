@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"; 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./CSS/Homepage.css";
 import { getAccessToken, verifyAccessToken } from "./clientSession"
 import NavBar from "./NavBar.jsx";
@@ -11,11 +11,20 @@ import Goals from "./Goals.jsx";
 import Bookings from "./Bookings.jsx";
 import Approvals from "./Approvals.jsx";
 import BiomarkerPage from "./Biomarker.jsx";
+import Notification from "./Notification.jsx";
+import { checkBiomarkers } from "./alertEngine";
 
-const PROFILE_PAGE = '/user';
-const PROFILE_SELECTION_PAGE = '/profile';
-
-const BIOMARKER_PAGE = '/biomarkers';
+// 🔥 ICONS
+import { 
+    User, 
+    Smartphone, 
+    Activity, 
+    Target, 
+    Calendar, 
+    Bell, 
+    CheckCircle, 
+    MessageCircle 
+} from "lucide-react";
 
 export default function Homepage() {
 
@@ -26,7 +35,29 @@ export default function Homepage() {
     const [showGoals, setShowGoals] = useState(false);
     const [showBookings, setShowBookings] = useState(false);
     const [showApprovals, setShowApprovals] = useState(false);
+    const [alerts, setAlerts] = useState([]);
+    const [showNoti, setShowNoti] = useState(false);
+
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fakeData = {
+            heartRate: 110,
+            steps: 1200,
+            sleep: 4
+        };
+
+        const result = checkBiomarkers(fakeData);
+
+        if (result.length > 0) {
+            setAlerts(result);
+            setShowNoti(true);
+
+            setTimeout(() => {
+                setShowNoti(false);
+            }, 5000);
+        }
+    }, []);
 
     return (
         <div className="homepage">
@@ -36,50 +67,37 @@ export default function Homepage() {
             <div className="content">
                 <h1>Welcome back, Olivia</h1>
                 <p>Here's your health overview for today.</p>
+
                 <TopRow 
                     openProfile={() => setShowProfile(true)} 
                     openDevices={() => setShowDevices(true)} 
                     openBiomarkers={() => navigate("/biomarker")}
                 />
+
                 <BottomRow
                     openChatbot={() => setShowChatbot(true)}
                     openAlert={() => setShowAlerts(true)}
                     openGoals={() => setShowGoals(true)}
                     openBookings={() => setShowBookings(true)}
                     openApprovals={() => setShowApprovals(true)}
-                
                 />
             </div>
 
-            {showProfile && (
-                <UserProfile onClose={() => setShowProfile(false)} />
-            )}
-            {showDevices && (
-                <ConnectedDevices onClose={() => setShowDevices(false)} />
-            )}
-            {showChatbot && (
-                <Chatbot onClose={() => setShowChatbot(false)} />
-            )}
-            {showAlerts && (
-                <Alerts onClose={() => setShowAlerts(false)} />
-            )}
-            {showGoals && (
-                <Goals onClose={() => setShowGoals(false)} />
-            )}
-            {showBookings && (
-                <Bookings onClose={() => setShowBookings(false)} />
-            )}
-            {showApprovals && (
-                <Approvals onClose={() => setShowApprovals(false)} />
-            )}
+            {showProfile && <UserProfile onClose={() => setShowProfile(false)} />}
+            {showDevices && <ConnectedDevices onClose={() => setShowDevices(false)} />}
+            {showChatbot && <Chatbot onClose={() => setShowChatbot(false)} />}
+            {showAlerts && <Alerts alerts={alerts} onClose={() => setShowAlerts(false)} />}
+            {showGoals && <Goals onClose={() => setShowGoals(false)} />}
+            {showBookings && <Bookings onClose={() => setShowBookings(false)} />}
+            {showApprovals && <Approvals onClose={() => setShowApprovals(false)} />}
+            {showNoti && <Notification alerts={alerts} onClose={() => setShowNoti(false)} />}
         </div>
     );
 }
 
-function Card({title, description, variant, icon, callback}){
-
+function Card({title, description, variant, icon, callback}) {
     return (
-        <div className= {`Card ${variant === "primary" ? "card-primary" : "card-secondary"}`}>
+        <div className={`Card ${variant === "primary" ? "card-primary" : "card-secondary"}`}>
             <div className="card-icon">
                 {icon}
             </div>
@@ -90,91 +108,97 @@ function Card({title, description, variant, icon, callback}){
     );
 }
 
-function TopRow({ openProfile, openDevices, openBiomarkers }) {
+/* ================= TOP ================= */
 
+function TopRow({ openProfile, openDevices, openBiomarkers }) {
     return (
         <div className="top-row">
+
             <div className="box1">
-                {/* biomarker data */}
                 <Card 
                     title="Biomarker Data"
                     description="Track and analyse health metrics"
                     variant="primary"
-                    icon="💉"
+                    icon={<Activity size={28} />}
                     callback={openBiomarkers}
                 />
             </div>
+
             <div className="box1">
-                {/* connected devices */}
                 <Card 
                     title="Connected Devices"
                     description="Manage your health tracking devices"
                     variant="primary"
-                    icon="📱"
+                    icon={<Smartphone size={28} />}
                     callback={openDevices}
                 />
             </div>
+
             <div className="box1">
-                {/* profile management */}
                 <Card
                     title="Profile Management"
                     description="View and manage family health profiles"
                     variant="primary"
-                    icon="👤" 
+                    icon={<User size={28} />}
                     callback={openProfile}
                 />
             </div>  
+
         </div>
     );
 }
+
+/* ================= BOTTOM ================= */
+
 function BottomRow({ openChatbot, openAlert, openGoals, openBookings, openApprovals }) {
     return (
         <div className="bottom-row">
+
             <div className="box2">
-                {/* goals */}
                 <Card 
                     title="Goals"
                     description="View and set your health goals"
-                    icon="🎯"
+                    icon={<Target size={26} />}
                     callback={openGoals}
                 />
             </div>
+
             <div className="box2">
-                {/* bookings */}
                 <Card 
                     title="Bookings"
                     description="Make bookings with healthcare providers"
-                    icon="📅"
+                    icon={<Calendar size={26} />}
                     callback={openBookings}
                 />
             </div>
+
             <div className="box2">
-                {/* alerts */}
                 <Card 
                     title="Alerts"
                     description="View and manage health alerts"
-                    icon="🔔"
+                    icon={<Bell size={26} />}
                     callback={openAlert}
                 />
             </div>
+
             <div className="box2">
-                {/* approvals */}
                 <Card 
                     title="Approvals"
                     description="Approve or deny access requests"
-                    icon="✅"
+                    icon={<CheckCircle size={26} />}
                     callback={openApprovals}
                 />
             </div>
+
             <div className="box2">
-            {/* chatbot ****figure diff css */}
-            <Card 
-                title="Chatbot"
-                description="FAQs & Assistance"
-                icon="🤖"
-                callback={openChatbot}
-            />
+                <Card 
+                    title="Chatbot"
+                    description="FAQs & Assistance"
+                    icon={<MessageCircle size={26} />}
+                    callback={openChatbot}
+                />
             </div>
+
         </div>
     );
 }

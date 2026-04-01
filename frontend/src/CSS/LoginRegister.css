@@ -17,25 +17,27 @@
 
 .tabs {
   display: flex;
-  background: #c1b4a5;
-  border-radius: 30px;
-  overflow: hidden;
+  gap: 15px; /* 🔥 IMPORTANT */
   margin-bottom: 30px;
-}
+} 
 
 .tab {
+
   flex: 1;
   padding: 14px;
   border: none;
   cursor: pointer;
   font-size: 18px;
-  background: transparent;
+
+  background: #28314E; /* RED default */
+  color: white;
+
+  border-radius: 999px; /* FULLY ROUNDED */
 }
 
 .tab.active {
-  background: #b12b3a;
+  background: #b12b3a; /* SELECTED = DARK BLUE */
   color: white;
-  border-radius: 30px;
 }
 
 h1 {
@@ -105,4 +107,28 @@ h1 {
 
 .test{
   text-align: center;
+}
+
+.role-switch {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.role-btn {
+  flex: 1;
+  padding: 12px;
+
+  border: none;
+  border-radius: 999px;
+
+  background: #28314E;
+  color: white;
+
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.role-btn.active {
+  background: #b12b3a;
 }
