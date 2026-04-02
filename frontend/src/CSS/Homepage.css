@@ -140,6 +140,10 @@
         font-size: 0.95rem;
     }
 
+    .Card {
+    padding: 10px 0; 
+    }
+
     .top-row,
     .bottom-row {
         flex-direction: column;
@@ -154,7 +158,7 @@
         max-width: 320px;
         margin: 0 auto;
         height: auto;
-        min-height: 180px;
+        min-height: unset;
         padding: 16px;
     }
 

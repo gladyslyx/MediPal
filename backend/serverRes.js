@@ -1,4 +1,22 @@
 import { DB } from "./DBConnect.js";
+DB.run(`
+CREATE TABLE IF NOT EXISTS BOOKINGS (
+    BOOKINGID INTEGER PRIMARY KEY AUTOINCREMENT,
+    ACCOUNTID INTEGER,
+    PROFILEID INTEGER,
+    DOCTOR TEXT,
+    ROLE TEXT,
+    REASON TEXT,
+    DATE TEXT,
+    STATUS TEXT
+)
+`, (err) => {
+    if (err) {
+        console.log("Error creating BOOKINGS table:", err.message);
+    } else {
+        console.log("BOOKINGS table ready");
+    }
+});
 import express from 'express';
 import bodyParser from 'body-parser'
 import cors from 'cors';
@@ -8,14 +26,18 @@ import { generateAccessToken, verifyAccessToken } from "./funcPack.js";
 
 const app = express();
 app.use(bodyParser.json()); //Allows JSON read.
-app.use(cors()); //Allow cross-origin requests.
+//app.use(cors()); //Allow cross-origin requests.
+app.use(cors({
+    origin: "*"
+}));
 
 //Contains resource API endpoints.
 
 //>>SET UP>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 //Port number. Currently set to 4000, local host.
-const portCode = 4000;
+//const portCode = 4000;
+const portCode = process.env.PORT || 3000;
 
 //Port listener. Logs message if successful.
 app.listen(portCode, (err) => {
@@ -106,6 +128,85 @@ app.post('/createProfile', async (req, res) => {
         } catch(err){res.status(500).send({ success: false })}//Err: Server Err.
     } else return res.status(401).send({ success: false });//Err: Unauthorized: Access token not found.
 })
+
+/* ================= BOOKINGS ================= */
+
+app.post('/createBooking', (req, res) => {
+
+    const { DOCTOR, ROLE, REASON, DATE } = req.body;
+
+    const authHeader = req.headers['authorization'];
+
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+
+        const token = authHeader.split(' ')[1];
+        const verification = verifyAccessToken(token);
+
+        if (!verification.success) {
+            return res.status(401).send({ success: false });
+        }
+
+        const { ACCOUNTID, PROFILEID } = verification.decoded;
+
+        const sql = `
+            INSERT INTO BOOKINGS 
+            (ACCOUNTID, PROFILEID, DOCTOR, ROLE, REASON, DATE, STATUS) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        DB.run(sql, 
+            [ACCOUNTID, PROFILEID, DOCTOR, ROLE, REASON, DATE, "Pending"], 
+            function(err) {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send({ success: false });
+                }
+
+                return res.status(200).send({ success: true });
+            }
+        );
+
+    } else {
+        return res.status(401).send({ success: false });
+    }
+});
+
+
+app.get('/getBookings', (req, res) => {
+
+    const authHeader = req.headers['authorization'];
+
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+
+        const token = authHeader.split(' ')[1];
+        const verification = verifyAccessToken(token);
+
+        if (!verification.success) {
+            return res.status(401).send({ success: false });
+        }
+
+        const { ACCOUNTID } = verification.decoded;
+
+        const sql = `
+            SELECT * FROM BOOKINGS WHERE ACCOUNTID = ?
+            ORDER BY BOOKINGID DESC
+        `;
+
+        DB.all(sql, [ACCOUNTID], (err, rows) => {
+            if (err) {
+                return res.status(500).send({ success: false });
+            }
+
+            return res.status(200).send({
+                success: true,
+                bookings: rows
+            });
+        });
+
+    } else {
+        return res.status(401).send({ success: false });
+    }
+});
 
 //NOT DONE
 // app.post('/getProfiles', async (req, res) => {

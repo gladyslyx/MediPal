@@ -1,6 +1,7 @@
 import "./CSS/Bookings.css";
 import { useState } from "react";
-import { User, Calendar, Clock, MapPin, Video } from "lucide-react";
+import { User, Clock, MapPin, Video } from "lucide-react";
+import axios from "axios";
 
 export default function Bookings({ onClose }) {
 
@@ -17,7 +18,6 @@ export default function Bookings({ onClose }) {
                     Book and manage healthcare appointments
                 </p>
 
-                {/* TOGGLE */}
                 <div className="booking-tabs">
                     <button
                         className={activeTab === "providers" ? "active" : ""}
@@ -34,12 +34,9 @@ export default function Bookings({ onClose }) {
                     </button>
                 </div>
 
-                {/* CONTENT */}
                 <div className="booking-content">
-
                     {activeTab === "providers" && <Providers />}
                     {activeTab === "my" && <MyBookings />}
-
                 </div>
 
             </div>
@@ -50,6 +47,7 @@ export default function Bookings({ onClose }) {
 /* ================= PROVIDERS ================= */
 
 function Providers() {
+
     const providers = [
         { name: "Dr. Lisa Thompson", role: "Cardiologist" },
         { name: "Dr. James Chen", role: "Nutritionist" },
@@ -59,20 +57,123 @@ function Providers() {
     return (
         <>
             {providers.map((p, i) => (
-                <div className="provider-card" key={i}>
-                    <div className="provider-info">
-                        <User size={22} />
-                        <div>
-                            <h4>{p.name}</h4>
-                            <p>{p.role}</p>
-                        </div>
-                    </div>
-
-                    <button className="book-btn">
-                        Book Appointment
-                    </button>
-                </div>
+                <ProviderCard key={i} provider={p} />
             ))}
+        </>
+    );
+}
+
+/* ================= EXPANDABLE CARD ================= */
+
+function ProviderCard({ provider }) {
+
+    const [expanded, setExpanded] = useState(false);
+    const [reason, setReason] = useState("");
+    const [date, setDate] = useState("");
+    const [showSuccess, setShowSuccess] = useState(false);
+
+    const handleBooking = async () => {
+
+        console.log("Booking clicked");
+
+        if (!reason || !date) {
+            alert("Please fill in all fields ❗");
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem("accessToken");
+
+            console.log("TOKEN:", token);
+
+            const res = await axios.post(
+                "http://localhost:4000/createBooking",
+                {
+                    doctor: provider.name,
+                    role: provider.role,
+                    reason: reason,
+                    date: date
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            console.log("RESPONSE:", res.data);
+
+            if (res.data.success) {
+                setShowSuccess(true);
+                setExpanded(false);
+                setReason("");
+                setDate("");
+
+                setTimeout(() => {
+                    setShowSuccess(false);
+                }, 2000);
+            }
+
+        } catch (err) {
+            console.error(err);
+            alert("Booking failed ❌");
+        }
+    };
+
+    return (
+        <>
+            <div className={`provider-card ${expanded ? "expanded" : ""}`}>
+
+                <div className="provider-info">
+                    <User size={22} />
+                    <div>
+                        <h4>{provider.name}</h4>
+                        <p>{provider.role}</p>
+                    </div>
+                </div>
+
+                <button
+                    className="book-btn"
+                    onClick={() => setExpanded(!expanded)}
+                >
+                    {expanded ? "Cancel" : "Book Appointment"}
+                </button>
+
+                {expanded && (
+                    <div className="booking-form">
+
+                        <label>Reason for request:</label>
+                        <input
+                            type="text"
+                            placeholder="Type..."
+                            value={reason}
+                            onChange={(e) => setReason(e.target.value)}
+                        />
+
+                        <label>Date:</label>
+                        <input
+                            type="date"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                        />
+
+                        <button
+                            className="confirm-btn"
+                            onClick={handleBooking}
+                        >
+                            Confirm Booking
+                        </button>
+
+                    </div>
+                )}
+            </div>
+
+            {/* SUCCESS POPUP */}
+            {showSuccess && (
+                <div className="success-popup">
+                    Booking Successful ✅
+                </div>
+            )}
         </>
     );
 }
@@ -80,6 +181,7 @@ function Providers() {
 /* ================= MY BOOKINGS ================= */
 
 function MyBookings() {
+
     const bookings = [
         {
             date: "Mar 15",
@@ -117,8 +219,8 @@ function MyBookings() {
                         <div className="booking-details">
                             <span><Clock size={14}/> {b.time}</span>
                             <span>
-                                {b.type === "Video Call" 
-                                    ? <Video size={14}/> 
+                                {b.type === "Video Call"
+                                    ? <Video size={14}/>
                                     : <MapPin size={14}/>}
                                 {b.type}
                             </span>

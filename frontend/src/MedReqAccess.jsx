@@ -1,41 +1,49 @@
 import "./CSS/MedReqAccess.css";
+import { Search, UserPlus } from "lucide-react";
 
-export default function RequestAccess({ onClose }) {
+export default function MedReqAccess({ onClose }) {
     return (
-        <div className="request-overlay">
-            <div className="request-container">
+        <div className="med-overlay" onClick={onClose}>
+            <div className="med-card" onClick={(e) => e.stopPropagation()}>
 
-                {/* Close Button */}
-                <div className="close-button" onClick={onClose}>✕</div>
+                {/* CLOSE */}
+                <button className="close-button" onClick={onClose}>✕</button>
 
-                {/* Title */}
-                <h1 className="request-title">👥+ Request Patient Data Access</h1>
-                <p className="request-subtitle">
-                    Submit a request to access patient health data
-                </p>
-
+                {/* HEADER */}
+                <div className="med-header">
+                    <UserPlus size={28} />
+                    <div>
+                        <h1>Request Patient Data Access</h1>
+                        <p>Submit a request to access patient health data</p>
+                    </div>
+                </div>
                 <hr />
 
-                {/* Search section */}
-                <div className="search-section">
-                    <label>Search for patient</label>
+                {/* FORM */}
+                <div className="med-form">
 
+                    {/* SEARCH */}
+                    <label>Search for patient</label>
                     <div className="search-box">
-                        <span className="search-icon">🔍</span>
+                        <Search size={18} />
                         <input
                             type="text"
                             placeholder="Enter patient name or email..."
                         />
                     </div>
-                </div>
 
-                {/* Button */}
-                <div className="request-btn-container">
-                    <button className="send-request-btn">
-                        Send request
-                    </button>
-                </div>
+                    {/* REASON */}
+                    <label>Reason for request:</label>
+                    <textarea placeholder="Type..."></textarea>
 
+                    {/* BUTTON */}
+                    <div className="btn-container">
+                        <button className="submit-btn">
+                            Send request
+                        </button>
+                    </div>
+
+                </div>
             </div>
         </div>
     );

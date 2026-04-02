@@ -1,173 +1,161 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import "./CSS/LoginRegister.css";
 import "./CSS/Err.css";
-import { setAccessToken, displayErr } from"./clientSession.jsx";
+import { setAccessToken, displayErr } from "./clientSession.jsx";
 
 const REGISTER_PAGE = '/register';
 const CREATE_PROFILE_PAGE = '/firstProfile';
 const HOME_PAGE = '/home';
+const MED_HOME_PAGE = '/medhome';
 
 const API_LOGIN = 'http://localhost:3000/login';
 
-//<<<<<<Login Page>>>>>>: Handles and displays login page.
-export default function Login(){
+//<<<<<<Login Page>>>>>> 
+export default function Login() {
+  const [role, setRole] = useState("user");
+
   return (
     <div className="login-page">
       <div className="login-card">
-        {/*Call Switcher*/}
+
         <Switcher />
 
-        {/*Message Division.*/}
         <h1>Welcome Back</h1>
         <p className="subtitle">Log in to continue your health journey</p>
 
-        {/*Error Message Display.*/}
         <h3 id="err" className="err"></h3>
 
-        {/*Call Form*/}
-        <Form />
+        {/* ROLE SWITCH */}
+        <div className="role-switch">
+          <button
+            type="button"
+            className={`role-btn ${role === "user" ? "active" : ""}`}
+            onClick={() => setRole("user")}
+          >
+            User
+          </button>
 
-        {/*Call Checkbox*/}
+          <button
+            type="button"
+            className={`role-btn ${role === "medical" ? "active" : ""}`}
+            onClick={() => setRole("medical")}
+          >
+            Medical Provider
+          </button>
+        </div>
+
+        <Form role={role} />
+
         <Checkbox />
       </div>
-    </div> 
+    </div>
   );
 }
 
 //<<<<<<Switcher Handler>>>>>>
 function Switcher() {
-
-  const nav = useNavigate()
-  const navigateToRegister = () =>{
-    nav(REGISTER_PAGE)
-  };
+  const nav = useNavigate();
 
   return (
     <main>
       <div className="tabs">
-        {/*Login Switcher*/}
-        <button
-          className="switch tab active"
-        >
+        <button className="switch tab active">
           Login
         </button>
 
-        {/*Register Switcher*/}
         <button
           className="switch tab"
-          onClick={navigateToRegister}
+          onClick={() => nav(REGISTER_PAGE)}
         >
           Register
         </button>
       </div>
     </main>
-    );
+  );
 }
 
 //<<<<<<Form Handler>>>>>>
-function Form() {
+function Form({ role }) {
 
   const nav = useNavigate();
-  const navigateToCreateProfile = () => {
-      nav(CREATE_PROFILE_PAGE);
-  };
-  const navigateToHome = () => {
-      nav(HOME_PAGE);
-  }
 
-  /** [ Feature Function ] 
-   * Called when submitting form data.
-  */
   const handleSubmit = (event) => {
     event.preventDefault();
-    
     const formData = new FormData(event.target);
     const dataObject = Object.fromEntries(formData);
-
     sendDataToBackend(dataObject);
   };
 
-  /** [ Backend Function ] 
-   * Sends data to backend.
-   * Handles late data entry errors.
-  */
   const sendDataToBackend = async (data) => {
-    try{
-      /**
-       * Steps:
-       * 1. Send login request with email and password.
-       * 2. Set access token.
-       * 3a. isHalf: true, navigate to create profile page with half token.
-       * 3b. isHalf: false, navigate to home page with full token.
-       */
-
-      //1. Payload.
+    try {
       const response = await fetch(API_LOGIN, {
         method: 'POST',
-        headers:{'Content-Type': 'application/json',},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
+
       const result = await response.json();
 
       if (result.success) {
 
-        //2. Set access token.
         setAccessToken(result.accessToken);
 
-        if(result.isHalf) {
-          //3a. isHalf: true, navigate to create profile page with half token.
-          navigateToCreateProfile();
-        }
-        else {
-          //3b. isHalf: false, navigate to home page with full token.
-          navigateToHome();
+        // 🔥 FIXED LOGIC HERE
+        if (role === "medical") {
+          // ALWAYS go med homepage
+          nav(MED_HOME_PAGE);
+        } else {
+          // USER FLOW
+          if (result.isHalf) {
+            nav(CREATE_PROFILE_PAGE);
+          } else {
+            nav(HOME_PAGE);
+          }
         }
 
-      }
-      else if (!result.success && response.status == 401) { 
-        console.log('Status: ',result.status);
+      } else if (response.status === 401) {
         displayErr("Wrong email or password.");
+      } else {
+        displayErr("Error: Login failed!");
       }
-      else displayErr("Error: Login failed!");
 
-    }catch(err){"Error: Login: Login: ", err.message}
+    } catch (err) {
+      console.error("Login error:", err);
+      displayErr("Server error.");
+    }
   };
 
-  //Returns HTML Body
   return (
     <main>
-      {/*Form Handler.*/}
-      <form name="form" onSubmit={handleSubmit}>     
+      <form onSubmit={handleSubmit}>
 
-        {/*Error Message Display.*/}
         <div id="err" className="err"></div>
 
-        {/*Email Input*/}
         <div className="form-group">
           <label>Email</label>
-          <input 
+          <input
             name="EMAIL"
             type="email"
             placeholder="youremail@mail.com"
             required
-            />
+          />
         </div>
 
-        {/*Password Input.*/}
         <div className="form-group">
           <label>Password</label>
-            <input 
-              name="PASSWORD" 
-              type="password"
-              placeholder="********"
-              required
-              />
+          <input
+            name="PASSWORD"
+            type="password"
+            placeholder="********"
+            required
+          />
         </div>
 
-        {/*Submit button.*/}
-        <button type="submit" className="submit-btn"> Log In </button>
+        <button type="submit" className="submit-btn">
+          Log In
+        </button>
 
-      {/*End of form*/}
       </form>
     </main>
   );
@@ -177,10 +165,9 @@ function Form() {
 function Checkbox() {
   return (
     <main>
-      {/*Remember Me Checkbox + Forgot Password. Incomplete.*/}
       <div className="form-options">
         <label className="remember">
-        <input type="checkbox" />
+          <input type="checkbox" />
           Remember me
         </label>
         <span className="forgot">Forgot password?</span>
