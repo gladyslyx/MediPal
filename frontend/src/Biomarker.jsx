@@ -15,7 +15,7 @@ export default function BiomarkerPage() {
             <div className="bio-header">
                 <div>
                     <h1>Biomarker Dashboard</h1>
-                    <p>Track your health data from connected devices</p>
+                    <p style={{ color: "black" }}>Track your health data from connected devices</p>
                 </div>
                 <span className="sync">Synced 2 mins ago</span>
             </div>

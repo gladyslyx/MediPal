@@ -15,7 +15,7 @@ export default function RegisterProfile() {
 
     const nav = useNavigate()
     const navigateToHome = () =>{
-    nav(HOME_PAGE)
+    nav(HOME_PAGE) 
     };
 
     const navigateToLogin = () =>{
